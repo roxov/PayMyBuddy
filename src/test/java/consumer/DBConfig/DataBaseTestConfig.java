@@ -1,4 +1,4 @@
-package fr.asterox.PayMyBuddy.consumer;
+package consumer.DBConfig;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,18 +12,11 @@ import java.util.Properties;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.stereotype.Service;
 
-/**
- * 
- * Configure the connection with the database.
- *
- */
-@Service
-public class DataBaseConfig {
+public class DataBaseTestConfig {
 	private static final Logger logger = LogManager.getLogger("DataBaseConfig");
 	private static final String PROPERTIES_FILE = "src/main/resources/dao.properties";
-	private static final String PROPERTY_URL = "url";
+	private static final String PROPERTY_URL = "url.for.tests";
 	private static final String PROPERTY_DRIVER = "driver";
 	private static final String PROPERTY_USER_NAME = "user.name";
 	private static final String PROPERTY_PASSWORD = "password";
@@ -32,13 +25,13 @@ public class DataBaseConfig {
 	private String username;
 	private String password;
 
-	DataBaseConfig(String url, String username, String password) {
+	DataBaseTestConfig(String url, String username, String password) {
 		this.url = url;
 		this.username = username;
 		this.password = password;
 	}
 
-	public static DataBaseConfig getInstance() throws Exception {
+	public static DataBaseTestConfig getInstance() throws Exception {
 		Properties properties = new Properties();
 		String url;
 		String driver;
@@ -68,7 +61,7 @@ public class DataBaseConfig {
 			throw new Exception("Driver is not found in classpath.", e);
 		}
 
-		DataBaseConfig instance = new DataBaseConfig(url, userName, password);
+		DataBaseTestConfig instance = new DataBaseTestConfig(url, userName, password);
 		return instance;
 	}
 
@@ -120,23 +113,27 @@ public class DataBaseConfig {
 		}
 	}
 
-	public UserAccountDAO getUserAccountDAO() {
-		return new UserAccountDAO(this);
+	public DataBasePrepareService getDataBasePrepareService() {
+		return new DataBasePrepareService(this);
 	}
 
-	public CreditBankDetailsDAO getCreditBankDetailsDAO() {
-		return new CreditBankDetailsDAO(this);
-	}
-
-	public DebitBankDetailsDAO getDeditBankDetailsDAO() {
-		return new DebitBankDetailsDAO(this);
-	}
-
-	public PaymentTransactionDAO getPaymentTransactionDAO() {
-		return new PaymentTransactionDAO(this);
-	}
-
-	public TransferTransactionDAO getTransferTransactionDAO() {
-		return new TransferTransactionDAO(this);
-	}
+//	public UserAccountDAO getUserAccountDAO() {
+//		return new UserAccountDAO(this);
+//	}
+//
+//	public CreditBankDetailsDAO getCreditBankDetailsDAO() {
+//		return new CreditBankDetailsDAO(this);
+//	}
+//
+//	public DebitBankDetailsDAO getDeditBankDetailsDAO() {
+//		return new DebitBankDetailsDAO(this);
+//	}
+//
+//	public PaymentTransactionDAO getPaymentTransactionDAO() {
+//		return new PaymentTransactionDAO(this);
+//	}
+//
+//	public TransferTransactionDAO getTransferTransactionDAO() {
+//		return new TransferTransactionDAO(this);
+//	}
 }

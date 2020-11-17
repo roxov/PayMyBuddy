@@ -9,7 +9,7 @@ public interface IUserAccountDAO {
 	 * @param userAcount
 	 * @throws Exception
 	 */
-	void create(UserAccount userAcount) throws Exception;
+	void createUserAccount(UserAccount userAcount) throws Exception;
 
 	/**
 	 * Find user account when user is connecting with his email.
@@ -19,7 +19,7 @@ public interface IUserAccountDAO {
 	 * @throws Exception
 	 */
 
-	UserAccount findByEmail(String email) throws Exception;
+	UserAccount findUserAccountByEmail(String email) throws Exception;
 
 	// TODO : mise à jour et suppression
 }
