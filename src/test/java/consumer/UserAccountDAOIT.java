@@ -59,7 +59,7 @@ public class UserAccountDAOIT {
 		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
-		final String SQL_GET_USER_ACCOUNT = "SELECT USER_ID, EMAIL, PASSWORD, APPLICATION_BALANCE FROM user_account WHERE EMAIL = emailTest";
+		final String SQL_GET_USER_ACCOUNT = "SELECT USER_ID, EMAIL, PASSWORD, APPLICATION_BALANCE FROM user_account WHERE EMAIL = 'emailTest'";
 
 		try {
 			con = dataBaseTestConfig.getConnection();
@@ -80,11 +80,45 @@ public class UserAccountDAOIT {
 	}
 
 	@Test
-	public void givenAUserInDB_whenFindThisPersonByTheEmail_thenReturnTheUserAccount() throws Exception {
+	public void givenAUserInDB_whenUpdateThisUser_thenReturnUpdatedUserAccount() throws Exception {
 		// GIVEN
 		Connection con = null;
 		PreparedStatement ps = null;
-		final String SQL_INSERT_USER_ACCOUNT = "INSERT INTO user_account VALUES(1,emailTest,password,25)";
+		ResultSet result = null;
+		final String SQL_INSERT_USER_ACCOUNT = "INSERT INTO user_account VALUES(1,'emailTest','password',25)";
+
+		try {
+			con = dataBaseTestConfig.getConnection();
+			ps = DataBaseTestConfig.PreparedRequestInitialization(con, SQL_INSERT_USER_ACCOUNT, false);
+
+			UserAccount userAccount = new UserAccount(1L, "emailTest2", "password2", 15, null, null, null, null, null);
+
+			// WHEN
+			userAccountDAO.updateUserAccount(userAccount);
+
+			// THEN
+			final String SQL_GET_USER_ACCOUNT = "SELECT USER_ID, EMAIL, PASSWORD, APPLICATION_BALANCE FROM user_account WHERE USER_ID = 1";
+			ps = DataBaseTestConfig.PreparedRequestInitialization(con, SQL_GET_USER_ACCOUNT, false);
+			result = ps.executeQuery();
+			assertEquals(1, result.getLong(1));
+			assertEquals("emailTest2", result.getString(2));
+			assertEquals("password2", result.getString(3));
+			assertEquals(15, result.getDouble(4));
+		} catch (SQLException e) {
+			throw new Exception(e);
+		} finally {
+			dataBaseTestConfig.closeResultSet(result);
+			dataBaseTestConfig.closePreparedStatement(ps);
+			dataBaseTestConfig.closeConnection(con);
+		}
+	}
+
+	@Test
+	public void givenAUserInDB_whenFindThisUserByTheEmail_thenReturnTheUserAccount() throws Exception {
+		// GIVEN
+		Connection con = null;
+		PreparedStatement ps = null;
+		final String SQL_INSERT_USER_ACCOUNT = "INSERT INTO user_account VALUES(1,'emailTest','password',25)";
 
 		try {
 			con = dataBaseTestConfig.getConnection();
@@ -103,7 +137,31 @@ public class UserAccountDAOIT {
 		assertEquals("emailTest", result.getEmail());
 		assertEquals("password", result.getPassword());
 		assertEquals(25, result.getApplicationBalance());
-
 	}
 
+	@Test
+	public void givenAUserInDB_whenDeleteThisPersonByEmail_thenReturnOneModifiedLine() throws Exception {
+		// GIVEN
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet result = null;
+		final String SQL_INSERT_USER_ACCOUNT = "INSERT INTO user_account VALUES(1,'emailTest','password',25)";
+
+		try {
+			con = dataBaseTestConfig.getConnection();
+			ps = DataBaseTestConfig.PreparedRequestInitialization(con, SQL_INSERT_USER_ACCOUNT, false);
+
+			// WHEN
+			userAccountDAO.deleteUserAccountByEmail("emailTest");
+
+			// THEN
+
+			// TODO : récupérer nombre de lignes modifiées
+		} catch (SQLException e) {
+			throw new Exception(e);
+		} finally {
+			dataBaseTestConfig.closePreparedStatement(ps);
+			dataBaseTestConfig.closeConnection(con);
+		}
+	}
 }

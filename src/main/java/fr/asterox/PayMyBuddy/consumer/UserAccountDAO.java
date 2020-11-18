@@ -15,6 +15,7 @@ import fr.asterox.PayMyBuddy.model.UserAccount;
 public class UserAccountDAO implements IUserAccountDAO {
 
 	private static final String SQL_SELECT_BY_EMAIL = "SELECT USER_ID, EMAIL, PASSWORD, APPLICATION_BALANCE FROM user_account WHERE EMAIL = ?";
+	private static final String SQL_CREATE_USER_ACCOUNT = "INSERT INTO user_account (EMAIL, PASSWORD, APPLICATION_BALANCE) VALUES(?,?,0)";
 
 	private static final Logger LOGGER = LogManager.getLogger(UserAccountDAO.class);
 	private DataBaseConfig dataBaseConfig;
@@ -24,8 +25,37 @@ public class UserAccountDAO implements IUserAccountDAO {
 	}
 
 	@Override
-	public void createUserAccount(UserAccount userAcount) throws Exception {
-		// TODO Auto-generated method stub
+	public void createUserAccount(UserAccount userAccount) throws Exception {
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			con = dataBaseConfig.getConnection();
+			ps = DataBaseConfig.PreparedRequestInitialization(con, SQL_CREATE_USER_ACCOUNT, true,
+					userAccount.getEmail(), userAccount.getPassword(), userAccount.getApplicationBalance());
+			int status = ps.executeUpdate();
+			if (status == 0) {
+				throw new Exception("Error creating user account, no line added");
+			}
+			rs = ps.getGeneratedKeys();
+			if (rs.next()) {
+				userAccount.setUserID(rs.getLong(1));
+				LOGGER.info("Creating user account.");
+			} else {
+				throw new Exception("Error creating user account, no generated ID returned.");
+			}
+		} catch (SQLException e) {
+			throw new Exception(e);
+		} finally {
+			dataBaseConfig.closeResultSet(rs);
+			dataBaseConfig.closePreparedStatement(ps);
+			dataBaseConfig.closeConnection(con);
+		}
+	}
+
+	@Override
+	public void updateUserAccount(UserAccount userAcount) throws Exception {
+		// TODO Auto-generated method stub GET BY ID
 
 	}
 
@@ -58,9 +88,14 @@ public class UserAccountDAO implements IUserAccountDAO {
 		UserAccount userAccount = new UserAccount();
 		userAccount.setUserID(resultSet.getLong(1));
 		userAccount.setEmail(resultSet.getString(2));
-		// Inutile de faire circuler le mdp ?
 		userAccount.setPassword(resultSet.getString(3));
 		userAccount.setApplicationBalance(resultSet.getDouble(4));
 		return userAccount;
+	}
+
+	@Override
+	public void deleteUserAccountByEmail(String email) throws Exception {
+		// TODO Auto-generated method stub
+
 	}
 }

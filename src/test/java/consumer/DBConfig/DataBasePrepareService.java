@@ -17,12 +17,10 @@ public class DataBasePrepareService {
 		Connection connection = null;
 		try {
 			connection = dataBaseTestConfig.getConnection();
-//TODO : initialisation de la DB
-//			// set parking entries to available
-//			connection.prepareStatement("update parking set available = true").execute();
-//
-//			// clear ticket entries;
-//			connection.prepareStatement("truncate table ticket").execute();
+			// clear tables entries;
+			connection.prepareStatement(
+					"truncate table user_account, credit_bank_details, debit_bank_details, friends_network, payment_transaction, transfer_transaction")
+					.execute();
 
 		} catch (Exception e) {
 			e.printStackTrace();
