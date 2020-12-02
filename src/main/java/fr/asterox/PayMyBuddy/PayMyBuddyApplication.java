@@ -10,8 +10,6 @@ import org.springframework.boot.actuate.trace.http.InMemoryHttpTraceRepository;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-import fr.asterox.PayMyBuddy.consumer.DataBaseConfig;
-
 @SpringBootApplication
 public class PayMyBuddyApplication {
 // Instance du logger avec en paramètre le nom donné à l'instance.
@@ -20,11 +18,6 @@ public class PayMyBuddyApplication {
 	public static void main(String[] args) throws IOException {
 		LOGGER.info("Initializing PayMyBuddy");
 		SpringApplication.run(PayMyBuddyApplication.class, args);
-	}
-
-	@Bean
-	public DataBaseConfig getInstance() throws Exception {
-		return DataBaseConfig.getInstance();
 	}
 
 	@Bean

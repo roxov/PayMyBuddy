@@ -1,34 +1,55 @@
 package fr.asterox.PayMyBuddy.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
+@Entity
 public class DebitBankDetails {
-	private Long debitID;
+	@Column(name = "DEBIT_ID")
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long debitId;
+	@ManyToOne
+	@JoinColumn(name = "USER_ID", nullable = false)
+	private UserAccount user;
+	@Column(name = "HOLDER_NAME")
 	private String holderName;
+	@Column(name = "CARD_NUMBER")
 	private int cardNumber;
+	@Column(name = "EXPIRATION_DATE")
 	private int expirationDate;
-	private int CVV;
+	private int cvv;
 
 	public DebitBankDetails() {
 		super();
 	}
 
-	public DebitBankDetails(Long debitID, String holderName, int cardNumber, int expirationDate, int cVV) {
+	public DebitBankDetails(Long debitId, UserAccount user, String holderName, int cardNumber, int expirationDate,
+			int cvv) {
 		super();
-		this.debitID = debitID;
+		this.debitId = debitId;
+		this.user = user;
 		this.holderName = holderName;
 		this.cardNumber = cardNumber;
 		this.expirationDate = expirationDate;
-		CVV = cVV;
+		this.cvv = cvv;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + CVV;
 		result = prime * result + cardNumber;
-		result = prime * result + ((debitID == null) ? 0 : debitID.hashCode());
+		result = prime * result + cvv;
+		result = prime * result + ((debitId == null) ? 0 : debitId.hashCode());
 		result = prime * result + expirationDate;
 		result = prime * result + ((holderName == null) ? 0 : holderName.hashCode());
+		result = prime * result + ((user == null) ? 0 : user.hashCode());
 		return result;
 	}
 
@@ -41,14 +62,14 @@ public class DebitBankDetails {
 		if (getClass() != obj.getClass())
 			return false;
 		DebitBankDetails other = (DebitBankDetails) obj;
-		if (CVV != other.CVV)
-			return false;
 		if (cardNumber != other.cardNumber)
 			return false;
-		if (debitID == null) {
-			if (other.debitID != null)
+		if (cvv != other.cvv)
+			return false;
+		if (debitId == null) {
+			if (other.debitId != null)
 				return false;
-		} else if (!debitID.equals(other.debitID))
+		} else if (!debitId.equals(other.debitId))
 			return false;
 		if (expirationDate != other.expirationDate)
 			return false;
@@ -57,15 +78,28 @@ public class DebitBankDetails {
 				return false;
 		} else if (!holderName.equals(other.holderName))
 			return false;
+		if (user == null) {
+			if (other.user != null)
+				return false;
+		} else if (!user.equals(other.user))
+			return false;
 		return true;
 	}
 
-	public Long getDebitID() {
-		return debitID;
+	public Long getDebitId() {
+		return debitId;
 	}
 
-	public void setDebitID(Long debitID) {
-		this.debitID = debitID;
+	public void setDebitId(Long debitId) {
+		this.debitId = debitId;
+	}
+
+	public UserAccount getUser() {
+		return user;
+	}
+
+	public void setUser(UserAccount user) {
+		this.user = user;
 	}
 
 	public String getHolderName() {
@@ -92,12 +126,12 @@ public class DebitBankDetails {
 		this.expirationDate = expirationDate;
 	}
 
-	public int getCVV() {
-		return CVV;
+	public int getCvv() {
+		return cvv;
 	}
 
-	public void setCVV(int cVV) {
-		CVV = cVV;
+	public void setCvv(int cvv) {
+		this.cvv = cvv;
 	}
 
 }

@@ -1,31 +1,49 @@
 package fr.asterox.PayMyBuddy.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
+@Entity
 public class CreditBankDetails {
-	private Long creditID;
+	@Column(name = "CREDIT_ID")
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long creditId;
+	@ManyToOne
+	@JoinColumn(name = "USER_ID", nullable = false)
+	private UserAccount user;
+	@Column(name = "HOLDER_NAME")
 	private String holderName;
-	private String IBAN;
-	private String BIC;
+	private String iban;
+	private String bic;
 
 	public CreditBankDetails() {
 		super();
 	}
 
-	public CreditBankDetails(Long creditID, String holderName, String iBAN, String bIC) {
+	public CreditBankDetails(Long creditId, UserAccount user, String holderName, String iban, String bic) {
 		super();
-		this.creditID = creditID;
+		this.creditId = creditId;
+		this.user = user;
 		this.holderName = holderName;
-		IBAN = iBAN;
-		BIC = bIC;
+		this.iban = iban;
+		this.bic = bic;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((BIC == null) ? 0 : BIC.hashCode());
-		result = prime * result + ((IBAN == null) ? 0 : IBAN.hashCode());
-		result = prime * result + ((creditID == null) ? 0 : creditID.hashCode());
+		result = prime * result + ((bic == null) ? 0 : bic.hashCode());
+		result = prime * result + ((creditId == null) ? 0 : creditId.hashCode());
 		result = prime * result + ((holderName == null) ? 0 : holderName.hashCode());
+		result = prime * result + ((iban == null) ? 0 : iban.hashCode());
+		result = prime * result + ((user == null) ? 0 : user.hashCode());
 		return result;
 	}
 
@@ -38,35 +56,48 @@ public class CreditBankDetails {
 		if (getClass() != obj.getClass())
 			return false;
 		CreditBankDetails other = (CreditBankDetails) obj;
-		if (BIC == null) {
-			if (other.BIC != null)
+		if (bic == null) {
+			if (other.bic != null)
 				return false;
-		} else if (!BIC.equals(other.BIC))
+		} else if (!bic.equals(other.bic))
 			return false;
-		if (IBAN == null) {
-			if (other.IBAN != null)
+		if (creditId == null) {
+			if (other.creditId != null)
 				return false;
-		} else if (!IBAN.equals(other.IBAN))
-			return false;
-		if (creditID == null) {
-			if (other.creditID != null)
-				return false;
-		} else if (!creditID.equals(other.creditID))
+		} else if (!creditId.equals(other.creditId))
 			return false;
 		if (holderName == null) {
 			if (other.holderName != null)
 				return false;
 		} else if (!holderName.equals(other.holderName))
 			return false;
+		if (iban == null) {
+			if (other.iban != null)
+				return false;
+		} else if (!iban.equals(other.iban))
+			return false;
+		if (user == null) {
+			if (other.user != null)
+				return false;
+		} else if (!user.equals(other.user))
+			return false;
 		return true;
 	}
 
-	public Long getCreditID() {
-		return creditID;
+	public Long getCreditId() {
+		return creditId;
 	}
 
-	public void setCreditID(Long creditID) {
-		this.creditID = creditID;
+	public void setCreditId(Long creditId) {
+		this.creditId = creditId;
+	}
+
+	public UserAccount getUser() {
+		return user;
+	}
+
+	public void setUser(UserAccount user) {
+		this.user = user;
 	}
 
 	public String getHolderName() {
@@ -77,20 +108,20 @@ public class CreditBankDetails {
 		this.holderName = holderName;
 	}
 
-	public String getIBAN() {
-		return IBAN;
+	public String getIban() {
+		return iban;
 	}
 
-	public void setIBAN(String iBAN) {
-		IBAN = iBAN;
+	public void setIban(String iban) {
+		this.iban = iban;
 	}
 
-	public String getBIC() {
-		return BIC;
+	public String getBic() {
+		return bic;
 	}
 
-	public void setBIC(String bIC) {
-		BIC = bIC;
+	public void setBic(String bic) {
+		this.bic = bic;
 	}
 
 }

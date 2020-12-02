@@ -2,32 +2,58 @@ package fr.asterox.PayMyBuddy.model;
 
 import java.util.List;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+
+@Entity
 public class UserAccount {
-	private Long userID;
+	@Column(name = "USER_ID")
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long userId;
 	private String email;
+	private String nickname;
 	private String password;
+	@Column(name = "APPLICATION_BALANCE")
 	private double applicationBalance;
+	@OneToMany(mappedBy = "user")
 	private List<TransferTransaction> transactionsList;
-	private List<PaymentTransaction> paymentsList;
+	@OneToMany(mappedBy = "issuer")
+	private List<PaymentTransaction> issuerPaymentsList;
+	@OneToMany(mappedBy = "recipient")
+	private List<PaymentTransaction> recipientPaymentsList;
+	@ManyToMany
+	@JoinTable(name = "FRIENDS_NETWORK", joinColumns = @JoinColumn(name = "USER_ID", referencedColumnName = "USER_ID"), inverseJoinColumns = @JoinColumn(name = "FRIEND_ID", referencedColumnName = "USER_ID"))
 	private List<UserAccount> friendsList;
+	@OneToMany(mappedBy = "user")
 	private List<CreditBankDetails> creditBankDetailsList;
+	@OneToMany(mappedBy = "user")
 	private List<DebitBankDetails> debitBankDetailsList;
 
 	public UserAccount() {
 		super();
 	}
 
-	public UserAccount(Long userID, String email, String password, double applicationBalance,
-			List<TransferTransaction> transactionsList, List<PaymentTransaction> paymentsList,
-			List<UserAccount> friendsList, List<CreditBankDetails> creditBankDetailsList,
-			List<DebitBankDetails> debitBankDetailsList) {
+	public UserAccount(Long userId, String email, String nickname, String password, double applicationBalance,
+			List<TransferTransaction> transactionsList, List<PaymentTransaction> issuerPaymentsList,
+			List<PaymentTransaction> recipientPaymentsList, List<UserAccount> friendsList,
+			List<CreditBankDetails> creditBankDetailsList, List<DebitBankDetails> debitBankDetailsList) {
 		super();
-		this.userID = userID;
+		this.userId = userId;
 		this.email = email;
+		this.nickname = nickname;
 		this.password = password;
 		this.applicationBalance = applicationBalance;
 		this.transactionsList = transactionsList;
-		this.paymentsList = paymentsList;
+		this.issuerPaymentsList = issuerPaymentsList;
+		this.recipientPaymentsList = recipientPaymentsList;
 		this.friendsList = friendsList;
 		this.creditBankDetailsList = creditBankDetailsList;
 		this.debitBankDetailsList = debitBankDetailsList;
@@ -44,10 +70,12 @@ public class UserAccount {
 		result = prime * result + ((debitBankDetailsList == null) ? 0 : debitBankDetailsList.hashCode());
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		result = prime * result + ((friendsList == null) ? 0 : friendsList.hashCode());
+		result = prime * result + ((issuerPaymentsList == null) ? 0 : issuerPaymentsList.hashCode());
+		result = prime * result + ((nickname == null) ? 0 : nickname.hashCode());
 		result = prime * result + ((password == null) ? 0 : password.hashCode());
-		result = prime * result + ((paymentsList == null) ? 0 : paymentsList.hashCode());
+		result = prime * result + ((recipientPaymentsList == null) ? 0 : recipientPaymentsList.hashCode());
 		result = prime * result + ((transactionsList == null) ? 0 : transactionsList.hashCode());
-		result = prime * result + ((userID == null) ? 0 : userID.hashCode());
+		result = prime * result + ((userId == null) ? 0 : userId.hashCode());
 		return result;
 	}
 
@@ -82,35 +110,45 @@ public class UserAccount {
 				return false;
 		} else if (!friendsList.equals(other.friendsList))
 			return false;
+		if (issuerPaymentsList == null) {
+			if (other.issuerPaymentsList != null)
+				return false;
+		} else if (!issuerPaymentsList.equals(other.issuerPaymentsList))
+			return false;
+		if (nickname == null) {
+			if (other.nickname != null)
+				return false;
+		} else if (!nickname.equals(other.nickname))
+			return false;
 		if (password == null) {
 			if (other.password != null)
 				return false;
 		} else if (!password.equals(other.password))
 			return false;
-		if (paymentsList == null) {
-			if (other.paymentsList != null)
+		if (recipientPaymentsList == null) {
+			if (other.recipientPaymentsList != null)
 				return false;
-		} else if (!paymentsList.equals(other.paymentsList))
+		} else if (!recipientPaymentsList.equals(other.recipientPaymentsList))
 			return false;
 		if (transactionsList == null) {
 			if (other.transactionsList != null)
 				return false;
 		} else if (!transactionsList.equals(other.transactionsList))
 			return false;
-		if (userID == null) {
-			if (other.userID != null)
+		if (userId == null) {
+			if (other.userId != null)
 				return false;
-		} else if (!userID.equals(other.userID))
+		} else if (!userId.equals(other.userId))
 			return false;
 		return true;
 	}
 
-	public Long getUserID() {
-		return userID;
+	public Long getUserId() {
+		return userId;
 	}
 
-	public void setUserID(Long userID) {
-		this.userID = userID;
+	public void setUserId(Long userId) {
+		this.userId = userId;
 	}
 
 	public String getEmail() {
@@ -119,6 +157,14 @@ public class UserAccount {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public String getNickname() {
+		return nickname;
+	}
+
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
 	}
 
 	public String getPassword() {
@@ -145,12 +191,20 @@ public class UserAccount {
 		this.transactionsList = transactionsList;
 	}
 
-	public List<PaymentTransaction> getPaymentsList() {
-		return paymentsList;
+	public List<PaymentTransaction> getIssuerPaymentsList() {
+		return issuerPaymentsList;
 	}
 
-	public void setPaymentsList(List<PaymentTransaction> paymentsList) {
-		this.paymentsList = paymentsList;
+	public void setIssuerPaymentsList(List<PaymentTransaction> issuerPaymentsList) {
+		this.issuerPaymentsList = issuerPaymentsList;
+	}
+
+	public List<PaymentTransaction> getRecipientPaymentsList() {
+		return recipientPaymentsList;
+	}
+
+	public void setRecipientPaymentsList(List<PaymentTransaction> recipientPaymentsList) {
+		this.recipientPaymentsList = recipientPaymentsList;
 	}
 
 	public List<UserAccount> getFriendsList() {

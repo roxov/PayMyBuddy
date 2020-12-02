@@ -1,8 +1,24 @@
 package fr.asterox.PayMyBuddy.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
+@Entity
 public class PaymentTransaction {
-	private Long paymentID;
+	@Column(name = "PAYMENT_ID")
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long paymentId;
+	@ManyToOne
+	@JoinColumn(name = "ISSUER_ID", nullable = false)
 	private UserAccount issuer;
+	@ManyToOne
+	@JoinColumn(name = "RECIPIENT_ID", nullable = false)
 	private UserAccount recipient;
 	private String description;
 	private double amount;
@@ -11,10 +27,10 @@ public class PaymentTransaction {
 		super();
 	}
 
-	public PaymentTransaction(Long paymentID, UserAccount issuer, UserAccount recipient, String description,
+	public PaymentTransaction(Long paymentId, UserAccount issuer, UserAccount recipient, String description,
 			double amount) {
 		super();
-		this.paymentID = paymentID;
+		this.paymentId = paymentId;
 		this.issuer = issuer;
 		this.recipient = recipient;
 		this.description = description;
@@ -30,7 +46,7 @@ public class PaymentTransaction {
 		result = prime * result + (int) (temp ^ (temp >>> 32));
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
 		result = prime * result + ((issuer == null) ? 0 : issuer.hashCode());
-		result = prime * result + ((paymentID == null) ? 0 : paymentID.hashCode());
+		result = prime * result + ((paymentId == null) ? 0 : paymentId.hashCode());
 		result = prime * result + ((recipient == null) ? 0 : recipient.hashCode());
 		return result;
 	}
@@ -56,10 +72,10 @@ public class PaymentTransaction {
 				return false;
 		} else if (!issuer.equals(other.issuer))
 			return false;
-		if (paymentID == null) {
-			if (other.paymentID != null)
+		if (paymentId == null) {
+			if (other.paymentId != null)
 				return false;
-		} else if (!paymentID.equals(other.paymentID))
+		} else if (!paymentId.equals(other.paymentId))
 			return false;
 		if (recipient == null) {
 			if (other.recipient != null)
@@ -69,12 +85,12 @@ public class PaymentTransaction {
 		return true;
 	}
 
-	public Long getPaymentID() {
-		return paymentID;
+	public Long getPaymentId() {
+		return paymentId;
 	}
 
-	public void setPaymentID(Long paymentID) {
-		this.paymentID = paymentID;
+	public void setPaymentId(Long paymentId) {
+		this.paymentId = paymentId;
 	}
 
 	public UserAccount getIssuer() {

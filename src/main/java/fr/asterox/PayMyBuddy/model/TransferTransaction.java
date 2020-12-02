@@ -1,7 +1,21 @@
 package fr.asterox.PayMyBuddy.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
+@Entity
 public class TransferTransaction {
-	private Long transferID;
+	@Column(name = "TRANSFER_ID")
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long transferId;
+	@ManyToOne
+	@JoinColumn(name = "USER_ID", nullable = false)
 	private UserAccount user;
 	private double amount;
 	private boolean credit;
@@ -10,9 +24,9 @@ public class TransferTransaction {
 		super();
 	}
 
-	public TransferTransaction(Long transferID, UserAccount user, double amount, boolean credit) {
+	public TransferTransaction(Long transferId, UserAccount user, double amount, boolean credit) {
 		super();
-		this.transferID = transferID;
+		this.transferId = transferId;
 		this.user = user;
 		this.amount = amount;
 		this.credit = credit;
@@ -26,7 +40,7 @@ public class TransferTransaction {
 		temp = Double.doubleToLongBits(amount);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
 		result = prime * result + (credit ? 1231 : 1237);
-		result = prime * result + ((transferID == null) ? 0 : transferID.hashCode());
+		result = prime * result + ((transferId == null) ? 0 : transferId.hashCode());
 		result = prime * result + ((user == null) ? 0 : user.hashCode());
 		return result;
 	}
@@ -44,10 +58,10 @@ public class TransferTransaction {
 			return false;
 		if (credit != other.credit)
 			return false;
-		if (transferID == null) {
-			if (other.transferID != null)
+		if (transferId == null) {
+			if (other.transferId != null)
 				return false;
-		} else if (!transferID.equals(other.transferID))
+		} else if (!transferId.equals(other.transferId))
 			return false;
 		if (user == null) {
 			if (other.user != null)
@@ -57,12 +71,12 @@ public class TransferTransaction {
 		return true;
 	}
 
-	public Long getTransferID() {
-		return transferID;
+	public Long getTransferId() {
+		return transferId;
 	}
 
-	public void setTransferID(Long transferID) {
-		this.transferID = transferID;
+	public void setTransferId(Long transferId) {
+		this.transferId = transferId;
 	}
 
 	public UserAccount getUser() {

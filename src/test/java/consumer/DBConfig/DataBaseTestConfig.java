@@ -1,73 +1,44 @@
 package consumer.DBConfig;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Properties;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.stereotype.Service;
 
+@Service
 public class DataBaseTestConfig {
-	private static final Logger logger = LogManager.getLogger("DataBaseConfig");
-	private static final String PROPERTIES_FILE = "src/main/resources/dao.properties";
-	private static final String PROPERTY_URL = "url.for.tests";
-	private static final String PROPERTY_DRIVER = "driver";
-	private static final String PROPERTY_USER_NAME = "user.name";
-	private static final String PROPERTY_PASSWORD = "password";
+	private static final Logger logger = LogManager.getLogger("DataBaseTestConfig");
 
-	private String url;
-	private String username;
-	private String password;
-
-	DataBaseTestConfig(String url, String username, String password) {
-		this.url = url;
-		this.username = username;
-		this.password = password;
-	}
-
-	public static DataBaseTestConfig getInstance() throws Exception {
-		Properties properties = new Properties();
-		String url;
-		String driver;
-		String userName;
-		String password;
-
-		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-		InputStream propertiesFile = classLoader.getResourceAsStream(PROPERTIES_FILE);
-
-		if (propertiesFile == null) {
-			throw new Exception(PROPERTIES_FILE + " not found.");
-		}
-
-		try {
-			properties.load(propertiesFile);
-			url = properties.getProperty(PROPERTY_URL);
-			driver = properties.getProperty(PROPERTY_DRIVER);
-			userName = properties.getProperty(PROPERTY_USER_NAME);
-			password = properties.getProperty(PROPERTY_PASSWORD);
-		} catch (IOException e) {
-			throw new Exception("Impossible to charge properties file " + PROPERTIES_FILE, e);
-		}
-
-		try {
-			Class.forName(driver);
-		} catch (ClassNotFoundException e) {
-			throw new Exception("Driver is not found in classpath.", e);
-		}
-
-		DataBaseTestConfig instance = new DataBaseTestConfig(url, userName, password);
-		return instance;
-	}
-
-	public Connection getConnection() throws SQLException {
-		logger.info("Create DB connection");
+	public Connection getConnection(String driver, String url, String username, String password)
+			throws SQLException, ClassNotFoundException {
+		logger.info("Create DB Test connection");
+		Class.forName(driver);
 		return DriverManager.getConnection(url, username, password);
+	}
+
+	public void clearDataBaseEntries(Connection con) {
+		String SQL_CLEAR_TABLES = "TRUNCATE table user_account, credit_bank_details, debit_bank_details, friends_network, payment_transaction, transfer_transaction";
+		String SQL_CREATE_USERACCOUNT = "INSERT INTO user_account VALUES(1,'email1','nickname1','password1',25)";
+
+		Connection connection = null;
+		PreparedStatement ps = null;
+		try {
+			ps = this.PreparedRequestInitialization(con, SQL_CLEAR_TABLES, false);
+			ps.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			this.closePreparedStatement(ps);
+			this.closeConnection(connection);
+
+		}
 	}
 
 	public static PreparedStatement PreparedRequestInitialization(Connection con, String sql,
@@ -113,27 +84,4 @@ public class DataBaseTestConfig {
 		}
 	}
 
-	public DataBasePrepareService getDataBasePrepareService() {
-		return new DataBasePrepareService(this);
-	}
-
-//	public UserAccountDAO getUserAccountDAO() {
-//		return new UserAccountDAO(this);
-//	}
-//
-//	public CreditBankDetailsDAO getCreditBankDetailsDAO() {
-//		return new CreditBankDetailsDAO(this);
-//	}
-//
-//	public DebitBankDetailsDAO getDeditBankDetailsDAO() {
-//		return new DebitBankDetailsDAO(this);
-//	}
-//
-//	public PaymentTransactionDAO getPaymentTransactionDAO() {
-//		return new PaymentTransactionDAO(this);
-//	}
-//
-//	public TransferTransactionDAO getTransferTransactionDAO() {
-//		return new TransferTransactionDAO(this);
-//	}
 }
