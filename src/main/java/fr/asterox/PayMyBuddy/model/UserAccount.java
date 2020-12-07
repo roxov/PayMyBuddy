@@ -16,6 +16,8 @@ import javax.persistence.OneToMany;
 public class UserAccount {
 	@Column(name = "USER_ID")
 	@Id
+	// @SequenceGenerator(name = "user_seq", sequenceName = "user_account_id_seq")
+	// @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long userId;
 	private String email;
@@ -39,6 +41,23 @@ public class UserAccount {
 
 	public UserAccount() {
 		super();
+	}
+
+	public UserAccount(String email, String nickname, String password, double applicationBalance,
+			List<TransferTransaction> transactionsList, List<PaymentTransaction> issuerPaymentsList,
+			List<PaymentTransaction> recipientPaymentsList, List<UserAccount> friendsList,
+			List<CreditBankDetails> creditBankDetailsList, List<DebitBankDetails> debitBankDetailsList) {
+		super();
+		this.email = email;
+		this.nickname = nickname;
+		this.password = password;
+		this.applicationBalance = applicationBalance;
+		this.transactionsList = transactionsList;
+		this.issuerPaymentsList = issuerPaymentsList;
+		this.recipientPaymentsList = recipientPaymentsList;
+		this.friendsList = friendsList;
+		this.creditBankDetailsList = creditBankDetailsList;
+		this.debitBankDetailsList = debitBankDetailsList;
 	}
 
 	public UserAccount(Long userId, String email, String nickname, String password, double applicationBalance,

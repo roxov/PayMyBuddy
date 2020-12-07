@@ -7,12 +7,14 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 
 @Entity
 public class DebitBankDetails {
 	@Column(name = "DEBIT_ID")
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@SequenceGenerator(name = "debit_seq", sequenceName = "debit_bank_details_id_seq")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "debit_seq")
 	private Long debitId;
 	@ManyToOne
 	@JoinColumn(name = "USER_ID", nullable = false)
