@@ -7,14 +7,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
 
 @Entity
 public class DebitBankDetails {
 	@Column(name = "DEBIT_ID")
 	@Id
-	@SequenceGenerator(name = "debit_seq", sequenceName = "debit_bank_details_id_seq")
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "debit_seq")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long debitId;
 	@ManyToOne
 	@JoinColumn(name = "USER_ID", nullable = false)
@@ -22,6 +20,8 @@ public class DebitBankDetails {
 	@Column(name = "HOLDER_NAME")
 	private String holderName;
 	@Column(name = "CARD_NUMBER")
+	// @ColumnTransformer(read = "pgp_sym_decrypt(cardNumber,'cryptedCardNumber')",
+	// write = "pgp_sym_encrypt(?,'cryptedCardNumber')")
 	private int cardNumber;
 	@Column(name = "EXPIRATION_DATE")
 	private int expirationDate;
@@ -29,6 +29,15 @@ public class DebitBankDetails {
 
 	public DebitBankDetails() {
 		super();
+	}
+
+	public DebitBankDetails(UserAccount user, String holderName, int cardNumber, int expirationDate, int cvv) {
+		super();
+		this.user = user;
+		this.holderName = holderName;
+		this.cardNumber = cardNumber;
+		this.expirationDate = expirationDate;
+		this.cvv = cvv;
 	}
 
 	public DebitBankDetails(Long debitId, UserAccount user, String holderName, int cardNumber, int expirationDate,

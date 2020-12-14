@@ -2,8 +2,10 @@ package fr.asterox.PayMyBuddy.model;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,27 +18,29 @@ import javax.persistence.OneToMany;
 public class UserAccount {
 	@Column(name = "USER_ID")
 	@Id
-	// @SequenceGenerator(name = "user_seq", sequenceName = "user_account_id_seq")
-	// @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long userId;
+	// @ColumnTransformer(read = "pgp_sym_decrypt(email,'cryptedEmail')", write =
+	// "pgp_sym_encrypt(?,'cryptedEmail')")
 	private String email;
 	private String nickname;
+	// @ColumnTransformer(read = "pgp_sym_decrypt(password,'cryptedPassword')",
+	// write = "pgp_sym_encrypt(?,'cryptedPassword')")
 	private String password;
 	@Column(name = "APPLICATION_BALANCE")
 	private double applicationBalance;
-	@OneToMany(mappedBy = "user")
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private List<TransferTransaction> transactionsList;
-	@OneToMany(mappedBy = "issuer")
+	@OneToMany(mappedBy = "issuer", cascade = CascadeType.ALL)
 	private List<PaymentTransaction> issuerPaymentsList;
-	@OneToMany(mappedBy = "recipient")
+	@OneToMany(mappedBy = "recipient", cascade = CascadeType.ALL)
 	private List<PaymentTransaction> recipientPaymentsList;
-	@ManyToMany
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinTable(name = "FRIENDS_NETWORK", joinColumns = @JoinColumn(name = "USER_ID", referencedColumnName = "USER_ID"), inverseJoinColumns = @JoinColumn(name = "FRIEND_ID", referencedColumnName = "USER_ID"))
 	private List<UserAccount> friendsList;
-	@OneToMany(mappedBy = "user")
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<CreditBankDetails> creditBankDetailsList;
-	@OneToMany(mappedBy = "user")
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<DebitBankDetails> debitBankDetailsList;
 
 	public UserAccount() {

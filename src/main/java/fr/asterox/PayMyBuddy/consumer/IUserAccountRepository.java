@@ -14,6 +14,6 @@ public interface IUserAccountRepository extends JpaRepository<UserAccount, Long>
 	 * @throws Exception
 	 */
 
-	UserAccount findByEmailLike(String email);
+	UserAccount findByEmail(String email);
 
 }

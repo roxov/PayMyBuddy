@@ -7,14 +7,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
 
 @Entity
 public class PaymentTransaction {
 	@Column(name = "PAYMENT_ID")
 	@Id
-	@SequenceGenerator(name = "payment_seq", sequenceName = "payment_transaction_id_seq")
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "payment_seq")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long paymentId;
 	@ManyToOne
 	@JoinColumn(name = "ISSUER_ID", nullable = false)
@@ -27,6 +25,14 @@ public class PaymentTransaction {
 
 	public PaymentTransaction() {
 		super();
+	}
+
+	public PaymentTransaction(UserAccount issuer, UserAccount recipient, String description, double amount) {
+		super();
+		this.issuer = issuer;
+		this.recipient = recipient;
+		this.description = description;
+		this.amount = amount;
 	}
 
 	public PaymentTransaction(Long paymentId, UserAccount issuer, UserAccount recipient, String description,

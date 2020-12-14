@@ -7,14 +7,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
 
 @Entity
 public class CreditBankDetails {
 	@Column(name = "CREDIT_ID")
 	@Id
-	@SequenceGenerator(name = "credit_seq", sequenceName = "credit_bank_details_id_seq")
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "credit_seq")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long creditId;
 	@ManyToOne
 	@JoinColumn(name = "USER_ID", nullable = false)
@@ -26,6 +24,14 @@ public class CreditBankDetails {
 
 	public CreditBankDetails() {
 		super();
+	}
+
+	public CreditBankDetails(UserAccount user, String holderName, String iban, String bic) {
+		super();
+		this.user = user;
+		this.holderName = holderName;
+		this.iban = iban;
+		this.bic = bic;
 	}
 
 	public CreditBankDetails(Long creditId, UserAccount user, String holderName, String iban, String bic) {

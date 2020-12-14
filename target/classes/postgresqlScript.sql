@@ -32,8 +32,14 @@ CREATE TABLE FRIENDS_NETWORK (
 );
 
 
+
+
+
+
+CREATE SEQUENCE credit_bank_details_id_seq;
+
 CREATE TABLE CREDIT_BANK_DETAILS (
-                CREDIT_ID INTEGER NOT NULL,
+                CREDIT_ID INTEGER NOT NULL DEFAULT nextval('credit_bank_details_id_seq'),
                 USER_ID INTEGER NOT NULL,
                 HOLDER_NAME VARCHAR(105) NOT NULL,
                 IBAN VARCHAR(27) NOT NULL,
@@ -41,12 +47,20 @@ CREATE TABLE CREDIT_BANK_DETAILS (
                 CONSTRAINT credit_bank_details_pk PRIMARY KEY (CREDIT_ID)
 );
 
+ALTER SEQUENCE credit_bank_details_id_seq OWNED BY CREDIT_BANK_DETAILS.CREDIT_ID;
 
 CREATE INDEX creditbankdetails_idx
  ON CREDIT_BANK_DETAILS
  ( USER_ID ASC );
 
 CLUSTER creditbankdetails_idx ON CREDIT_BANK_DETAILS;
+
+
+
+
+
+
+
 
 CREATE SEQUENCE payment_transaction_id_seq;
 
@@ -68,6 +82,13 @@ CREATE INDEX transaction_idx
 
 CLUSTER transaction_idx ON PAYMENT_TRANSACTION;
 
+
+
+
+
+
+
+
 CREATE SEQUENCE debit_bank_details_id_seq;
 
 CREATE TABLE DEBIT_BANK_DETAILS (
@@ -88,6 +109,13 @@ CREATE INDEX holderbankaccount_idx
  ( USER_ID ASC );
 
 CLUSTER holderbankaccount_idx ON DEBIT_BANK_DETAILS;
+
+
+
+
+
+
+
 
 CREATE SEQUENCE transfer_transaction_id_seq;
 
