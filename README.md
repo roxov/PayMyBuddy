@@ -1,2 +1,2 @@
 # PayMyBuddy
-![Screenshot](DB_UML.png)
+![Diagramme UML](DB_UML.png)
