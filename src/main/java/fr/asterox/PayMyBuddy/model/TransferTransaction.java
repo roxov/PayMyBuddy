@@ -19,24 +19,36 @@ public class TransferTransaction {
 	private UserAccount user;
 	private double amount;
 	private boolean credit;
+	@ManyToOne
+	@JoinColumn(name = "CREDIT_ID", nullable = true)
+	private CreditBankDetails creditBankDetails;
+	@ManyToOne
+	@JoinColumn(name = "DEBIT_ID", nullable = true)
+	private DebitBankDetails debitBankDetails;
 
 	public TransferTransaction() {
 		super();
 	}
 
-	public TransferTransaction(UserAccount user, double amount, boolean credit) {
+	public TransferTransaction(UserAccount user, double amount, boolean credit, CreditBankDetails creditBankDetails,
+			DebitBankDetails debitBankDetails) {
 		super();
 		this.user = user;
 		this.amount = amount;
 		this.credit = credit;
+		this.creditBankDetails = creditBankDetails;
+		this.debitBankDetails = debitBankDetails;
 	}
 
-	public TransferTransaction(Long transferId, UserAccount user, double amount, boolean credit) {
+	public TransferTransaction(Long transferId, UserAccount user, double amount, boolean credit,
+			CreditBankDetails creditBankDetails, DebitBankDetails debitBankDetails) {
 		super();
 		this.transferId = transferId;
 		this.user = user;
 		this.amount = amount;
 		this.credit = credit;
+		this.creditBankDetails = creditBankDetails;
+		this.debitBankDetails = debitBankDetails;
 	}
 
 	@Override
@@ -47,6 +59,8 @@ public class TransferTransaction {
 		temp = Double.doubleToLongBits(amount);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
 		result = prime * result + (credit ? 1231 : 1237);
+		result = prime * result + ((creditBankDetails == null) ? 0 : creditBankDetails.hashCode());
+		result = prime * result + ((debitBankDetails == null) ? 0 : debitBankDetails.hashCode());
 		result = prime * result + ((transferId == null) ? 0 : transferId.hashCode());
 		result = prime * result + ((user == null) ? 0 : user.hashCode());
 		return result;
@@ -64,6 +78,16 @@ public class TransferTransaction {
 		if (Double.doubleToLongBits(amount) != Double.doubleToLongBits(other.amount))
 			return false;
 		if (credit != other.credit)
+			return false;
+		if (creditBankDetails == null) {
+			if (other.creditBankDetails != null)
+				return false;
+		} else if (!creditBankDetails.equals(other.creditBankDetails))
+			return false;
+		if (debitBankDetails == null) {
+			if (other.debitBankDetails != null)
+				return false;
+		} else if (!debitBankDetails.equals(other.debitBankDetails))
 			return false;
 		if (transferId == null) {
 			if (other.transferId != null)
@@ -108,6 +132,22 @@ public class TransferTransaction {
 
 	public void setCredit(boolean credit) {
 		this.credit = credit;
+	}
+
+	public CreditBankDetails getCreditBankDetails() {
+		return creditBankDetails;
+	}
+
+	public void setCreditBankDetails(CreditBankDetails creditBankDetails) {
+		this.creditBankDetails = creditBankDetails;
+	}
+
+	public DebitBankDetails getDebitBankDetails() {
+		return debitBankDetails;
+	}
+
+	public void setDebitBankDetails(DebitBankDetails debitBankDetails) {
+		this.debitBankDetails = debitBankDetails;
 	}
 
 }

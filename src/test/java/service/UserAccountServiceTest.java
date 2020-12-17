@@ -35,11 +35,11 @@ public class UserAccountServiceTest {
 
 	@BeforeEach
 	private void setUpPerTest() throws Exception {
-		userAccount1 = new UserAccount("email1", "nickname1", "password1", 10, new ArrayList<>(), new ArrayList<>(),
+		userAccount1 = new UserAccount("email1", "nickname1", "password1", 1000, new ArrayList<>(), new ArrayList<>(),
 				new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
 		List<UserAccount> friendsList = new ArrayList<>();
 		friendsList.add(userAccount1);
-		userAccount2 = new UserAccount("email2", "nickname2", "password2", 20, new ArrayList<>(), new ArrayList<>(),
+		userAccount2 = new UserAccount("email2", "nickname2", "password2", 2000, new ArrayList<>(), new ArrayList<>(),
 				new ArrayList<>(), friendsList, new ArrayList<>(), new ArrayList<>());
 	}
 
@@ -55,7 +55,7 @@ public class UserAccountServiceTest {
 		assertEquals("email1", result.getEmail());
 		assertEquals("nickname1", result.getNickname());
 		assertEquals("password1", result.getPassword());
-		assertEquals(10, result.getApplicationBalance());
+		assertEquals(1000, result.getApplicationBalance());
 		assertEquals(new ArrayList<>(), result.getFriendsList());
 	}
 
@@ -66,7 +66,7 @@ public class UserAccountServiceTest {
 		when(userAccountRepository.findByEmail("email2")).thenReturn(userAccount2);
 
 		// WHEN
-		Optional<UserAccount> result = userAccountService.addFriend(userAccount2, userAccount1);
+		Optional<UserAccount> result = userAccountService.addFriend(userAccount2, "email1");
 
 		// THEN
 		assertEquals(Optional.empty(), result);
@@ -80,7 +80,7 @@ public class UserAccountServiceTest {
 		when(userAccountRepository.save(userAccount1)).thenReturn(userAccount1);
 
 		// WHEN
-		Optional<UserAccount> result = userAccountService.addFriend(userAccount1, userAccount2);
+		Optional<UserAccount> result = userAccountService.addFriend(userAccount1, "email2");
 
 		// THEN
 		assertEquals("email1", result.get().getEmail());
@@ -90,14 +90,14 @@ public class UserAccountServiceTest {
 	@Test
 	public void givenAUserAccountWithOneRelatonship_whenAddFriend_thenReturnListWithTwoRelationships() {
 		// GIVEN
-		UserAccount userAccount3 = new UserAccount("email3", "nickname3", "password3", 20, new ArrayList<>(),
+		UserAccount userAccount3 = new UserAccount("email3", "nickname3", "password3", 2000, new ArrayList<>(),
 				new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
 		when(userAccountRepository.findByEmail("email2")).thenReturn(userAccount2);
 		when(userAccountRepository.findByEmail("email3")).thenReturn(userAccount3);
 		when(userAccountRepository.save(userAccount2)).thenReturn(userAccount2);
 
 		// WHEN
-		Optional<UserAccount> result = userAccountService.addFriend(userAccount2, userAccount3);
+		Optional<UserAccount> result = userAccountService.addFriend(userAccount2, "email3");
 
 		// THEN
 		assertEquals("email2", result.get().getEmail());
@@ -115,7 +115,7 @@ public class UserAccountServiceTest {
 		when(userAccountRepository.save(userAccount2)).thenReturn(userAccount2);
 
 		// WHEN
-		Optional<UserAccount> result = userAccountService.deleteFriend(userAccount2, userAccount1);
+		Optional<UserAccount> result = userAccountService.deleteFriend(userAccount2, "email1");
 
 		// THEN
 		assertEquals("email2", result.get().getEmail());
@@ -129,7 +129,7 @@ public class UserAccountServiceTest {
 		when(userAccountRepository.findByEmail("email2")).thenReturn(userAccount2);
 
 		// WHEN
-		Optional<UserAccount> result = userAccountService.deleteFriend(userAccount1, userAccount2);
+		Optional<UserAccount> result = userAccountService.deleteFriend(userAccount1, "email2");
 
 		// THEN
 		assertEquals(Optional.empty(), result);

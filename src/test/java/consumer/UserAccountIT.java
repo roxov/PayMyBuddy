@@ -20,7 +20,7 @@ import fr.asterox.PayMyBuddy.service.UserAccountService;
 
 @SpringBootTest(classes = PayMyBuddyApplication.class)
 @RunWith(SpringRunner.class)
-//@Sql("setup.sql")
+//@Sql("/setup.sql")
 public class UserAccountIT {
 
 	@Autowired
@@ -45,7 +45,7 @@ public class UserAccountIT {
 	@Test
 	public void givenAUserAccount_whenCreateUserAccount_thenReturnTheUserAccountAtNextId() throws Exception {
 		// GIVEN
-		UserAccount userAccount = new UserAccount("email2", "nickname2", "password2", 10, new ArrayList<>(),
+		UserAccount userAccount = new UserAccount("email2", "nickname2", "password2", 1000, new ArrayList<>(),
 				new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
 
 		// WHEN
@@ -59,14 +59,15 @@ public class UserAccountIT {
 		assertEquals("email2", userAccountsList.get(1).getEmail());
 		assertEquals("nickname2", userAccountsList.get(1).getNickname());
 		assertEquals("password2", userAccountsList.get(1).getPassword());
-		assertEquals(10, userAccountsList.get(1).getApplicationBalance());
+		assertEquals(1000, userAccountsList.get(1).getApplicationBalance());
 	}
 
 	@Test
 	public void givenAnUpdatedUserAccount_whenUpdateThisUserAccount_thenReturnUpdatedUserAccount() throws Exception {
 		// GIVEN
-		UserAccount updatedUserAccount = new UserAccount(id, "email2", "nickname2", "password2", 10, new ArrayList<>(),
-				new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+		UserAccount updatedUserAccount = new UserAccount(id, "email2", "nickname2", "password2", 1000,
+				new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(),
+				new ArrayList<>());
 
 		// WHEN
 		UserAccount resultForId = userAccountRepository.save(updatedUserAccount);
@@ -78,7 +79,7 @@ public class UserAccountIT {
 		assertEquals("email2", userAccountsList.get(0).getEmail());
 		assertEquals("nickname2", userAccountsList.get(0).getNickname());
 		assertEquals("password2", userAccountsList.get(0).getPassword());
-		assertEquals(10, userAccountsList.get(0).getApplicationBalance());
+		assertEquals(1000, userAccountsList.get(0).getApplicationBalance());
 	}
 
 	@Test
@@ -113,7 +114,7 @@ public class UserAccountIT {
 		UserAccount createdFriend = userAccountRepository.save(friend);
 
 		// WHEN
-		Optional<UserAccount> createdUserWithFriend = userAccountService.addFriend(createdUserAccount, createdFriend);
+		Optional<UserAccount> createdUserWithFriend = userAccountService.addFriend(createdUserAccount, "email2");
 
 		// THEN
 		Long userId = createdFriend.getUserId();
@@ -137,7 +138,7 @@ public class UserAccountIT {
 		UserAccount savedFriend = userAccountRepository.save(friend);
 
 		// WHEN
-		Optional<UserAccount> friendWithRelationship = userAccountService.addFriend(savedFriend, createdUserAccount);
+		Optional<UserAccount> friendWithRelationship = userAccountService.addFriend(savedFriend, "email1");
 
 		// THEN
 		assertEquals(Optional.empty(), friendWithRelationship);
@@ -154,8 +155,7 @@ public class UserAccountIT {
 		UserAccount savedFriend = userAccountRepository.save(friend);
 
 		// WHEN
-		Optional<UserAccount> friendWithNoRelationship = userAccountService.deleteFriend(savedFriend,
-				createdUserAccount);
+		Optional<UserAccount> friendWithNoRelationship = userAccountService.deleteFriend(savedFriend, "email1");
 
 		// THEN
 		assertEquals(new ArrayList<>(), friendWithNoRelationship.get().getFriendsList());
@@ -170,7 +170,7 @@ public class UserAccountIT {
 		UserAccount savedFriend = userAccountRepository.save(friend);
 
 		// WHEN
-		Optional<UserAccount> userWithNoRelationship = userAccountService.deleteFriend(createdUserAccount, savedFriend);
+		Optional<UserAccount> userWithNoRelationship = userAccountService.deleteFriend(createdUserAccount, "email2");
 
 		// THEN
 		assertEquals(Optional.empty(), userWithNoRelationship);

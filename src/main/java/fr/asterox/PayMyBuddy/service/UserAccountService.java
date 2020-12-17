@@ -34,13 +34,25 @@ public class UserAccountService {
 
 	private static final Logger LOGGER = LogManager.getLogger(UserAccountService.class);
 
-	public Optional<UserAccount> addFriend(UserAccount userAccount, UserAccount friendUser) {
+	public Optional<UserAccount> addFriend(UserAccount userAccount, String friendEmail) {
 		UserAccount user = userAccountRepository.findByEmail(userAccount.getEmail());
-		UserAccount friend = userAccountRepository.findByEmail(friendUser.getEmail());
+
+		if (user == null) {
+			LOGGER.error("This user account does not exist.");
+			return Optional.empty();
+		}
+
+		UserAccount friend = userAccountRepository.findByEmail(friendEmail);
+
+		if (friend == null) {
+			LOGGER.error("This user account (friend) does not exist.");
+			return Optional.empty();
+		}
+
 		List<UserAccount> friendsList = user.getFriendsList();
 
 		for (UserAccount existingFriend : friendsList) {
-			if (existingFriend.equals(friend)) {
+			if (existingFriend.getEmail().equals(friendEmail)) {
 				LOGGER.info("This relationship already exists.");
 				return Optional.empty();
 			}
@@ -51,17 +63,23 @@ public class UserAccountService {
 		return Optional.of(userAccountRepository.save(user));
 	}
 
-	public Optional<UserAccount> deleteFriend(UserAccount userAccount, UserAccount friendUser) {
+	public Optional<UserAccount> deleteFriend(UserAccount userAccount, String friendEmail) {
 		UserAccount user = userAccountRepository.findByEmail(userAccount.getEmail());
-		UserAccount friend = userAccountRepository.findByEmail(friendUser.getEmail());
+
+		if (user == null) {
+			LOGGER.error("This user account does not exist.");
+			return Optional.empty();
+		}
+
 		List<UserAccount> friendsList = user.getFriendsList();
 
 		for (UserAccount existingFriend : friendsList) {
-			if (existingFriend.equals(friend)) {
+			if (existingFriend.getEmail().equals(friendEmail)) {
 				LOGGER.info("Deleting friendUser from friendslist");
-				friendsList.remove(friend);
+				friendsList.remove(existingFriend);
 				user.setFriendsList(friendsList);
 				return Optional.of(userAccountRepository.save(user));
+
 			}
 		}
 		LOGGER.info("No relation to delete");
@@ -75,6 +93,12 @@ public class UserAccountService {
 
 	public UserAccount findByEmail(String email) {
 		UserAccount userAccount = userAccountRepository.findByEmail(email);
+
+		if (userAccount == null) {
+			LOGGER.error("This user account does not exist.");
+			return null;
+		}
+
 		LOGGER.info("Creating UserAccount");
 		return userAccount;
 	}

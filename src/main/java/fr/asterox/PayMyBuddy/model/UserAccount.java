@@ -14,6 +14,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
+import org.hibernate.annotations.ColumnTransformer;
+
 @Entity
 public class UserAccount {
 	@Column(name = "USER_ID")
@@ -24,8 +26,7 @@ public class UserAccount {
 	// "pgp_sym_encrypt(?,'cryptedEmail')")
 	private String email;
 	private String nickname;
-	// @ColumnTransformer(read = "pgp_sym_decrypt(password,'cryptedPassword')",
-	// write = "pgp_sym_encrypt(?,'cryptedPassword')")
+	@ColumnTransformer(read = "pgp_sym_decrypt(password,'cryptedPassword')", write = "pgp_sym_encrypt(?,'cryptedPassword')")
 	private String password;
 	@Column(name = "APPLICATION_BALANCE")
 	private double applicationBalance;
@@ -35,7 +36,7 @@ public class UserAccount {
 	private List<PaymentTransaction> issuerPaymentsList;
 	@OneToMany(mappedBy = "recipient", cascade = CascadeType.ALL)
 	private List<PaymentTransaction> recipientPaymentsList;
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
 	@JoinTable(name = "FRIENDS_NETWORK", joinColumns = @JoinColumn(name = "USER_ID", referencedColumnName = "USER_ID"), inverseJoinColumns = @JoinColumn(name = "FRIEND_ID", referencedColumnName = "USER_ID"))
 	private List<UserAccount> friendsList;
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)

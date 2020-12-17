@@ -51,10 +51,9 @@ public class CreditBankDetailsIT {
 		CreditBankDetails createdCreditBankDetails = creditBankDetailsRepository.save(creditBankDetails);
 
 		// THEN
-		assertEquals(createdCreditBankDetails, createdUserAccount.getCreditBankDetailsList().get(0));
 		Long creditId = createdCreditBankDetails.getCreditId();
 		Optional<CreditBankDetails> result = creditBankDetailsRepository.findById(creditId);
-		assertEquals(createdUserAccount, result.get().getUser());
+		assertEquals("email1", result.get().getUser().getEmail());
 		assertEquals("holdername1", result.get().getHolderName());
 		assertEquals("iban1", result.get().getIban());
 		assertEquals("bic1", result.get().getBic());
@@ -67,8 +66,6 @@ public class CreditBankDetailsIT {
 		CreditBankDetails creditBankDetails = new CreditBankDetails(createdUserAccount, "holdername1", "iban1", "bic1");
 		CreditBankDetails createdCreditBankDetails = creditBankDetailsRepository.save(creditBankDetails);
 		Long creditId = createdCreditBankDetails.getCreditId();
-		Long testLinesNb = creditBankDetailsRepository.count();
-		assertEquals(1L, testLinesNb);
 
 		// WHEN
 		creditBankDetailsRepository.deleteById(creditId);

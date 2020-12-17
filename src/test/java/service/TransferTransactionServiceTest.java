@@ -1,6 +1,7 @@
 package service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -48,7 +49,7 @@ public class TransferTransactionServiceTest {
 
 	@BeforeEach
 	private void setUpPerTest() throws Exception {
-		userAccount = new UserAccount("email1", "nickname1", "password1", 10, new ArrayList<>(), new ArrayList<>(),
+		userAccount = new UserAccount("email1", "nickname1", "password1", 1000, new ArrayList<>(), new ArrayList<>(),
 				new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
 	}
 
@@ -56,7 +57,8 @@ public class TransferTransactionServiceTest {
 	public void givenAUserAccount_whenTransferToCreditBank_thenReturnSavedTransaction() {
 		// GIVEN
 		CreditBankDetails creditBankDetails = new CreditBankDetails(userAccount, "holdername1", "iban1", "bic1");
-		TransferTransaction transferTransaction = new TransferTransaction(userAccount, 10, true);
+		TransferTransaction transferTransaction = new TransferTransaction(userAccount, 10, true, creditBankDetails,
+				null);
 		when(userAccountRepository.findByEmail("email1")).thenReturn(userAccount);
 		when(creditBankDetailsRepository.findByUser(userAccount)).thenReturn(creditBankDetails);
 		when(userAccountRepository.save(userAccount)).thenReturn(userAccount);
@@ -66,16 +68,18 @@ public class TransferTransactionServiceTest {
 		Optional<TransferTransaction> result = transferTransactionService.transferToCreditBank(userAccount, 10);
 
 		// THEN
-		assertEquals(0, userAccount.getApplicationBalance());
-		assertEquals(userAccount, result.get().getUser());
+		assertEquals(Math.round(1000 - (10 * 1.005 * 100)), result.get().getUser().getApplicationBalance());
 		assertEquals(10, result.get().getAmount());
+		assertNull(result.get().getDebitBankDetails());
+		assertEquals("bic1", result.get().getCreditBankDetails().getBic());
 	}
 
 	@Test
 	public void givenAUserAccount_whenTransferFromDebitBank_thenReturnSavedTransaction() {
 		// GIVEN
 		DebitBankDetails debitBankDetails = new DebitBankDetails(userAccount, "holdername1", 1234, 1221, 222);
-		TransferTransaction transferTransaction = new TransferTransaction(userAccount, 10, false);
+		TransferTransaction transferTransaction = new TransferTransaction(userAccount, 10, false, null,
+				debitBankDetails);
 		when(userAccountRepository.findByEmail("email1")).thenReturn(userAccount);
 		when(debitBankDetailsRepository.findByUser(userAccount)).thenReturn(debitBankDetails);
 		when(userAccountRepository.save(userAccount)).thenReturn(userAccount);
@@ -85,9 +89,11 @@ public class TransferTransactionServiceTest {
 		Optional<TransferTransaction> result = transferTransactionService.transferFromDebitBank(userAccount, 10);
 
 		// THEN
-		assertEquals(20, userAccount.getApplicationBalance());
+		assertEquals(2000, userAccount.getApplicationBalance());
 		assertEquals(userAccount, result.get().getUser());
 		assertEquals(10, result.get().getAmount());
+		assertNull(result.get().getCreditBankDetails());
+		assertEquals(1234, result.get().getDebitBankDetails().getCardNumber());
 	}
 
 }

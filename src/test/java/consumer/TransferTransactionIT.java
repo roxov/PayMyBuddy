@@ -1,8 +1,10 @@
 package consumer;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -17,6 +19,8 @@ import fr.asterox.PayMyBuddy.consumer.ICreditBankDetailsRepository;
 import fr.asterox.PayMyBuddy.consumer.IDebitBankDetailsRepository;
 import fr.asterox.PayMyBuddy.consumer.ITransferTransactionRepository;
 import fr.asterox.PayMyBuddy.consumer.IUserAccountRepository;
+import fr.asterox.PayMyBuddy.model.CreditBankDetails;
+import fr.asterox.PayMyBuddy.model.DebitBankDetails;
 import fr.asterox.PayMyBuddy.model.TransferTransaction;
 import fr.asterox.PayMyBuddy.model.UserAccount;
 import fr.asterox.PayMyBuddy.service.TransferTransactionService;
@@ -41,6 +45,8 @@ public class TransferTransactionIT {
 	IDebitBankDetailsRepository debitBankDetailsRepository;
 
 	UserAccount userAccount;
+	CreditBankDetails creditBankDetails;
+	DebitBankDetails debitBankDetails;
 	Long userId;
 
 	@BeforeEach
@@ -50,8 +56,17 @@ public class TransferTransactionIT {
 		debitBankDetailsRepository.deleteAll();
 		transferTransactionRepository.deleteAll();
 
-		UserAccount user = new UserAccount("email1", "nickname1", "password1", 50, new ArrayList<>(), new ArrayList<>(),
-				new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+		UserAccount user = new UserAccount("email1", "nickname1", "password1", 5000, new ArrayList<>(),
+				new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+		creditBankDetails = new CreditBankDetails(user, "holdername1", "iban1", "bic1");
+		List<CreditBankDetails> creditBankDetailsList = new ArrayList<>();
+		creditBankDetailsList.add(creditBankDetails);
+		debitBankDetails = new DebitBankDetails(user, "holdername1", 12345678, 1020, 222);
+		List<DebitBankDetails> debitBankDetailsList = new ArrayList<>();
+		debitBankDetailsList.add(debitBankDetails);
+		user.setCreditBankDetailsList(creditBankDetailsList);
+		user.setDebitBankDetailsList(debitBankDetailsList);
+
 		userAccount = userAccountRepository.save(user);
 		userId = userAccount.getUserId();
 	}
@@ -64,14 +79,16 @@ public class TransferTransactionIT {
 		Optional<TransferTransaction> result = transferTransactionService.transferToCreditBank(userAccount, 25);
 
 		// THEN
-		assertEquals(25, userAccountRepository.findById(userId).get().getApplicationBalance());
-
 		Long transferId = result.get().getTransferId();
 		Optional<TransferTransaction> createdTransferTransaction = transferTransactionRepository.findById(transferId);
 
 		assertEquals(25, createdTransferTransaction.get().getAmount());
 		assertEquals("email1", createdTransferTransaction.get().getUser().getEmail());
-		assertEquals(25, userAccount.getApplicationBalance());
+		assertEquals(Math.round(5000 - 25 * 1.005 * 100),
+				createdTransferTransaction.get().getUser().getApplicationBalance());
+		assertNull(createdTransferTransaction.get().getDebitBankDetails());
+		assertEquals("iban1", createdTransferTransaction.get().getCreditBankDetails().getIban());
+
 	}
 
 	@Test
@@ -82,14 +99,14 @@ public class TransferTransactionIT {
 		Optional<TransferTransaction> result = transferTransactionService.transferFromDebitBank(userAccount, 25);
 
 		// THEN
-		assertEquals(75, userAccountRepository.findById(userId).get().getApplicationBalance());
-
 		Long transferId = result.get().getTransferId();
 		Optional<TransferTransaction> createdTransferTransaction = transferTransactionRepository.findById(transferId);
 
 		assertEquals(25, createdTransferTransaction.get().getAmount());
 		assertEquals("email1", createdTransferTransaction.get().getUser().getEmail());
-		assertEquals(75, userAccount.getApplicationBalance());
+		assertEquals(7500, createdTransferTransaction.get().getUser().getApplicationBalance());
+		assertNull(createdTransferTransaction.get().getCreditBankDetails());
+		assertEquals(1020, createdTransferTransaction.get().getDebitBankDetails().getExpirationDate());
 	}
 
 }

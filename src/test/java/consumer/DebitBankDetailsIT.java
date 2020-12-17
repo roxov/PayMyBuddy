@@ -52,10 +52,9 @@ public class DebitBankDetailsIT {
 		DebitBankDetails createdDebitBankDetails = debitBankDetailsRepository.save(debitBankDetails);
 
 		// THEN
-		assertEquals(createdDebitBankDetails, createdUserAccount.getDebitBankDetailsList().get(0));
 		Long debitId = createdDebitBankDetails.getDebitId();
 		Optional<DebitBankDetails> result = debitBankDetailsRepository.findById(debitId);
-		assertEquals(createdUserAccount, result.get().getUser());
+		assertEquals("email1", result.get().getUser().getEmail());
 		assertEquals("holdername1", result.get().getHolderName());
 		assertEquals(12345678, result.get().getCardNumber());
 		assertEquals(0120, result.get().getExpirationDate());
@@ -69,8 +68,6 @@ public class DebitBankDetailsIT {
 				222);
 		DebitBankDetails createdDebitBankDetails = debitBankDetailsRepository.save(debitBankDetails);
 		Long debitId = createdDebitBankDetails.getDebitId();
-		Long testLinesNb = debitBankDetailsRepository.count();
-		assertEquals(1L, testLinesNb);
 
 		// WHEN
 		debitBankDetailsRepository.deleteById(debitId);
