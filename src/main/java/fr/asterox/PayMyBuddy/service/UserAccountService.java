@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import fr.asterox.PayMyBuddy.consumer.ICreditBankDetailsRepository;
@@ -31,6 +32,9 @@ public class UserAccountService {
 
 	@Autowired
 	ITransferTransactionRepository transferTransactionRepository;
+
+	@Autowired
+	PasswordEncoder passwordEncoder;
 
 	private static final Logger LOGGER = LogManager.getLogger(UserAccountService.class);
 
@@ -86,9 +90,11 @@ public class UserAccountService {
 		return Optional.empty();
 	}
 
-	public void createUserAccount(UserAccount userAccount) {
-		userAccountRepository.save(userAccount);
+	public UserAccount createUserAccount(UserAccount userAccount) {
+		String encodedPassword = passwordEncoder.encode(userAccount.getPassword());
+		userAccount.setPassword(encodedPassword);
 		LOGGER.info("Creating UserAccount");
+		return userAccountRepository.save(userAccount);
 	}
 
 	public UserAccount findByEmail(String email) {

@@ -77,7 +77,7 @@ public class TransferTransactionServiceTest {
 	@Test
 	public void givenAUserAccount_whenTransferFromDebitBank_thenReturnSavedTransaction() {
 		// GIVEN
-		DebitBankDetails debitBankDetails = new DebitBankDetails(userAccount, "holdername1", 1234, 1221, 222);
+		DebitBankDetails debitBankDetails = new DebitBankDetails(userAccount, "holdername1", 1234, 1221);
 		TransferTransaction transferTransaction = new TransferTransaction(userAccount, 10, false, null,
 				debitBankDetails);
 		when(userAccountRepository.findByEmail("email1")).thenReturn(userAccount);

@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TransferTransaction.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">PayMyBuddy</a> &gt; <a href="index.source.html" class="el_package">fr.asterox.PayMyBuddy.model</a> &gt; <span class="el_source">TransferTransaction.java</span></div><h1>TransferTransaction.java</h1><pre class="source lang-java linenums">package fr.asterox.PayMyBuddy.model;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
+@Entity
+public class TransferTransaction {
+	@Column(name = &quot;TRANSFER_ID&quot;)
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long transferId;
+	@ManyToOne
+	@JoinColumn(name = &quot;USER_ID&quot;, nullable = false)
+	private UserAccount user;
+	private double amount;
+	private boolean credit;
+	@ManyToOne
+	@JoinColumn(name = &quot;CREDIT_ID&quot;, nullable = true)
+	private CreditBankDetails creditBankDetails;
+	@ManyToOne
+	@JoinColumn(name = &quot;DEBIT_ID&quot;, nullable = true)
+	private DebitBankDetails debitBankDetails;
+
+	public TransferTransaction() {
+<span class="fc" id="L30">		super();</span>
+<span class="fc" id="L31">	}</span>
+
+	public TransferTransaction(UserAccount user, double amount, boolean credit, CreditBankDetails creditBankDetails,
+			DebitBankDetails debitBankDetails) {
+<span class="fc" id="L35">		super();</span>
+<span class="fc" id="L36">		this.user = user;</span>
+<span class="fc" id="L37">		this.amount = amount;</span>
+<span class="fc" id="L38">		this.credit = credit;</span>
+<span class="fc" id="L39">		this.creditBankDetails = creditBankDetails;</span>
+<span class="fc" id="L40">		this.debitBankDetails = debitBankDetails;</span>
+<span class="fc" id="L41">	}</span>
+
+	public TransferTransaction(Long transferId, UserAccount user, double amount, boolean credit,
+			CreditBankDetails creditBankDetails, DebitBankDetails debitBankDetails) {
+<span class="nc" id="L45">		super();</span>
+<span class="nc" id="L46">		this.transferId = transferId;</span>
+<span class="nc" id="L47">		this.user = user;</span>
+<span class="nc" id="L48">		this.amount = amount;</span>
+<span class="nc" id="L49">		this.credit = credit;</span>
+<span class="nc" id="L50">		this.creditBankDetails = creditBankDetails;</span>
+<span class="nc" id="L51">		this.debitBankDetails = debitBankDetails;</span>
+<span class="nc" id="L52">	}</span>
+
+	@Override
+	public int hashCode() {
+<span class="nc" id="L56">		final int prime = 31;</span>
+<span class="nc" id="L57">		int result = 1;</span>
+		long temp;
+<span class="nc" id="L59">		temp = Double.doubleToLongBits(amount);</span>
+<span class="nc" id="L60">		result = prime * result + (int) (temp ^ (temp &gt;&gt;&gt; 32));</span>
+<span class="nc bnc" id="L61" title="All 2 branches missed.">		result = prime * result + (credit ? 1231 : 1237);</span>
+<span class="nc bnc" id="L62" title="All 2 branches missed.">		result = prime * result + ((creditBankDetails == null) ? 0 : creditBankDetails.hashCode());</span>
+<span class="nc bnc" id="L63" title="All 2 branches missed.">		result = prime * result + ((debitBankDetails == null) ? 0 : debitBankDetails.hashCode());</span>
+<span class="nc bnc" id="L64" title="All 2 branches missed.">		result = prime * result + ((transferId == null) ? 0 : transferId.hashCode());</span>
+<span class="nc bnc" id="L65" title="All 2 branches missed.">		result = prime * result + ((user == null) ? 0 : user.hashCode());</span>
+<span class="nc" id="L66">		return result;</span>
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+<span class="pc bpc" id="L71" title="1 of 2 branches missed.">		if (this == obj)</span>
+<span class="nc" id="L72">			return true;</span>
+<span class="pc bpc" id="L73" title="1 of 2 branches missed.">		if (obj == null)</span>
+<span class="nc" id="L74">			return false;</span>
+<span class="pc bpc" id="L75" title="1 of 2 branches missed.">		if (getClass() != obj.getClass())</span>
+<span class="nc" id="L76">			return false;</span>
+<span class="fc" id="L77">		TransferTransaction other = (TransferTransaction) obj;</span>
+<span class="pc bpc" id="L78" title="1 of 2 branches missed.">		if (Double.doubleToLongBits(amount) != Double.doubleToLongBits(other.amount))</span>
+<span class="nc" id="L79">			return false;</span>
+<span class="pc bpc" id="L80" title="1 of 2 branches missed.">		if (credit != other.credit)</span>
+<span class="nc" id="L81">			return false;</span>
+<span class="fc bfc" id="L82" title="All 2 branches covered.">		if (creditBankDetails == null) {</span>
+<span class="pc bpc" id="L83" title="1 of 2 branches missed.">			if (other.creditBankDetails != null)</span>
+<span class="nc" id="L84">				return false;</span>
+<span class="pc bpc" id="L85" title="1 of 2 branches missed.">		} else if (!creditBankDetails.equals(other.creditBankDetails))</span>
+<span class="nc" id="L86">			return false;</span>
+<span class="fc bfc" id="L87" title="All 2 branches covered.">		if (debitBankDetails == null) {</span>
+<span class="pc bpc" id="L88" title="1 of 2 branches missed.">			if (other.debitBankDetails != null)</span>
+<span class="nc" id="L89">				return false;</span>
+<span class="pc bpc" id="L90" title="1 of 2 branches missed.">		} else if (!debitBankDetails.equals(other.debitBankDetails))</span>
+<span class="nc" id="L91">			return false;</span>
+<span class="pc bpc" id="L92" title="1 of 2 branches missed.">		if (transferId == null) {</span>
+<span class="pc bpc" id="L93" title="1 of 2 branches missed.">			if (other.transferId != null)</span>
+<span class="nc" id="L94">				return false;</span>
+<span class="nc bnc" id="L95" title="All 2 branches missed.">		} else if (!transferId.equals(other.transferId))</span>
+<span class="nc" id="L96">			return false;</span>
+<span class="pc bpc" id="L97" title="1 of 2 branches missed.">		if (user == null) {</span>
+<span class="nc bnc" id="L98" title="All 2 branches missed.">			if (other.user != null)</span>
+<span class="nc" id="L99">				return false;</span>
+<span class="pc bpc" id="L100" title="1 of 2 branches missed.">		} else if (!user.equals(other.user))</span>
+<span class="nc" id="L101">			return false;</span>
+<span class="fc" id="L102">		return true;</span>
+	}
+
+	public Long getTransferId() {
+<span class="fc" id="L106">		return transferId;</span>
+	}
+
+	public void setTransferId(Long transferId) {
+<span class="nc" id="L110">		this.transferId = transferId;</span>
+<span class="nc" id="L111">	}</span>
+
+	public UserAccount getUser() {
+<span class="fc" id="L114">		return user;</span>
+	}
+
+	public void setUser(UserAccount user) {
+<span class="nc" id="L118">		this.user = user;</span>
+<span class="nc" id="L119">	}</span>
+
+	public double getAmount() {
+<span class="fc" id="L122">		return amount;</span>
+	}
+
+	public void setAmount(double amount) {
+<span class="nc" id="L126">		this.amount = amount;</span>
+<span class="nc" id="L127">	}</span>
+
+	public boolean isCredit() {
+<span class="nc" id="L130">		return credit;</span>
+	}
+
+	public void setCredit(boolean credit) {
+<span class="nc" id="L134">		this.credit = credit;</span>
+<span class="nc" id="L135">	}</span>
+
+	public CreditBankDetails getCreditBankDetails() {
+<span class="fc" id="L138">		return creditBankDetails;</span>
+	}
+
+	public void setCreditBankDetails(CreditBankDetails creditBankDetails) {
+<span class="nc" id="L142">		this.creditBankDetails = creditBankDetails;</span>
+<span class="nc" id="L143">	}</span>
+
+	public DebitBankDetails getDebitBankDetails() {
+<span class="fc" id="L146">		return debitBankDetails;</span>
+	}
+
+	public void setDebitBankDetails(DebitBankDetails debitBankDetails) {
+<span class="nc" id="L150">		this.debitBankDetails = debitBankDetails;</span>
+<span class="nc" id="L151">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

@@ -61,7 +61,7 @@ public class TransferTransactionIT {
 		creditBankDetails = new CreditBankDetails(user, "holdername1", "iban1", "bic1");
 		List<CreditBankDetails> creditBankDetailsList = new ArrayList<>();
 		creditBankDetailsList.add(creditBankDetails);
-		debitBankDetails = new DebitBankDetails(user, "holdername1", 12345678, 1020, 222);
+		debitBankDetails = new DebitBankDetails(user, "holdername1", 12345678, 1020);
 		List<DebitBankDetails> debitBankDetailsList = new ArrayList<>();
 		debitBankDetailsList.add(debitBankDetails);
 		user.setCreditBankDetailsList(creditBankDetailsList);

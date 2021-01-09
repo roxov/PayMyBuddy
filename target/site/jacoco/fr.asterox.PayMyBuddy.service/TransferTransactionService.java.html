@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TransferTransactionService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">PayMyBuddy</a> &gt; <a href="index.source.html" class="el_package">fr.asterox.PayMyBuddy.service</a> &gt; <span class="el_source">TransferTransactionService.java</span></div><h1>TransferTransactionService.java</h1><pre class="source lang-java linenums">package fr.asterox.PayMyBuddy.service;
+
+import java.util.Optional;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import fr.asterox.PayMyBuddy.consumer.ICreditBankDetailsRepository;
+import fr.asterox.PayMyBuddy.consumer.IDebitBankDetailsRepository;
+import fr.asterox.PayMyBuddy.consumer.ITransferTransactionRepository;
+import fr.asterox.PayMyBuddy.consumer.IUserAccountRepository;
+import fr.asterox.PayMyBuddy.model.CreditBankDetails;
+import fr.asterox.PayMyBuddy.model.DebitBankDetails;
+import fr.asterox.PayMyBuddy.model.TransferTransaction;
+import fr.asterox.PayMyBuddy.model.UserAccount;
+
+@Service
+<span class="fc" id="L21">public class TransferTransactionService {</span>
+
+	@Autowired
+	ITransferTransactionRepository transferTransactionRepository;
+
+	@Autowired
+	IDebitBankDetailsRepository debitBankDetailsRepository;
+
+	@Autowired
+	ICreditBankDetailsRepository creditBankDetailsRepository;
+
+	@Autowired
+	IUserAccountRepository userAccountRepository;
+
+<span class="fc" id="L35">	private static final Logger LOGGER = LogManager.getLogger(TransferTransactionService.class);</span>
+
+	@Transactional
+	public Optional&lt;TransferTransaction&gt; transferToCreditBank(UserAccount userAccount, double amount) {
+<span class="fc" id="L39">		UserAccount user = userAccountRepository.findByEmail(userAccount.getEmail());</span>
+
+<span class="pc bpc" id="L41" title="1 of 2 branches missed.">		if (user == null) {</span>
+<span class="nc" id="L42">			LOGGER.error(&quot;This user account does not exist.&quot;);</span>
+<span class="nc" id="L43">			return Optional.empty();</span>
+		}
+
+<span class="fc" id="L46">		CreditBankDetails creditBankDetails = creditBankDetailsRepository.findByUser(user);</span>
+
+<span class="pc bpc" id="L48" title="1 of 2 branches missed.">		if (creditBankDetails == null) {</span>
+<span class="nc" id="L49">			LOGGER.error(&quot;These credit bank details do not exist.&quot;);</span>
+<span class="nc" id="L50">			return Optional.empty();</span>
+		}
+
+<span class="fc" id="L53">		double applicationBalance = Math.round(user.getApplicationBalance() - amount * 1.005 * 100);</span>
+<span class="fc" id="L54">		user.setApplicationBalance(applicationBalance);</span>
+<span class="fc" id="L55">		userAccountRepository.save(user);</span>
+
+<span class="fc" id="L57">		LOGGER.info(&quot;Transfering money to bank account&quot;);</span>
+
+<span class="fc" id="L59">		return Optional.of(transferTransactionRepository</span>
+<span class="fc" id="L60">				.save(new TransferTransaction(user, amount, true, creditBankDetails, null)));</span>
+	}
+
+	@Transactional
+	public Optional&lt;TransferTransaction&gt; transferFromDebitBank(UserAccount userAccount, double amount) {
+<span class="fc" id="L65">		UserAccount user = userAccountRepository.findByEmail(userAccount.getEmail());</span>
+
+<span class="pc bpc" id="L67" title="1 of 2 branches missed.">		if (user == null) {</span>
+<span class="nc" id="L68">			LOGGER.error(&quot;This user account does not exist.&quot;);</span>
+<span class="nc" id="L69">			return Optional.empty();</span>
+		}
+
+<span class="fc" id="L72">		DebitBankDetails debitBankDetails = debitBankDetailsRepository.findByUser(user);</span>
+
+<span class="pc bpc" id="L74" title="1 of 2 branches missed.">		if (debitBankDetails == null) {</span>
+<span class="nc" id="L75">			LOGGER.error(&quot;These debit bank details do not exist.&quot;);</span>
+<span class="nc" id="L76">			return Optional.empty();</span>
+		}
+
+<span class="fc" id="L79">		double applicationBalance = Math.round(user.getApplicationBalance() + amount * 100);</span>
+<span class="fc" id="L80">		user.setApplicationBalance(applicationBalance);</span>
+<span class="fc" id="L81">		userAccountRepository.save(user);</span>
+<span class="fc" id="L82">		LOGGER.info(&quot;Transfering money from bank account&quot;);</span>
+<span class="fc" id="L83">		return Optional.of(transferTransactionRepository</span>
+<span class="fc" id="L84">				.save(new TransferTransaction(user, amount, false, null, debitBankDetails)));</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

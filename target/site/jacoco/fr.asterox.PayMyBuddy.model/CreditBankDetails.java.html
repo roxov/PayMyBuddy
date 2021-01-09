@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CreditBankDetails.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">PayMyBuddy</a> &gt; <a href="index.source.html" class="el_package">fr.asterox.PayMyBuddy.model</a> &gt; <span class="el_source">CreditBankDetails.java</span></div><h1>CreditBankDetails.java</h1><pre class="source lang-java linenums">package fr.asterox.PayMyBuddy.model;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
+@Entity
+public class CreditBankDetails {
+	@Column(name = &quot;CREDIT_ID&quot;)
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long creditId;
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = &quot;USER_ID&quot;, nullable = false)
+	private UserAccount user;
+	@Column(name = &quot;HOLDER_NAME&quot;)
+	private String holderName;
+	private String iban;
+	private String bic;
+
+	public CreditBankDetails() {
+<span class="fc" id="L27">		super();</span>
+<span class="fc" id="L28">	}</span>
+
+	public CreditBankDetails(UserAccount user, String holderName, String iban, String bic) {
+<span class="fc" id="L31">		super();</span>
+<span class="fc" id="L32">		this.user = user;</span>
+<span class="fc" id="L33">		this.holderName = holderName;</span>
+<span class="fc" id="L34">		this.iban = iban;</span>
+<span class="fc" id="L35">		this.bic = bic;</span>
+<span class="fc" id="L36">	}</span>
+
+	public CreditBankDetails(Long creditId, UserAccount user, String holderName, String iban, String bic) {
+<span class="nc" id="L39">		super();</span>
+<span class="nc" id="L40">		this.creditId = creditId;</span>
+<span class="nc" id="L41">		this.user = user;</span>
+<span class="nc" id="L42">		this.holderName = holderName;</span>
+<span class="nc" id="L43">		this.iban = iban;</span>
+<span class="nc" id="L44">		this.bic = bic;</span>
+<span class="nc" id="L45">	}</span>
+
+	@Override
+	public int hashCode() {
+<span class="nc" id="L49">		final int prime = 31;</span>
+<span class="nc" id="L50">		int result = 1;</span>
+<span class="nc bnc" id="L51" title="All 2 branches missed.">		result = prime * result + ((bic == null) ? 0 : bic.hashCode());</span>
+<span class="nc bnc" id="L52" title="All 2 branches missed.">		result = prime * result + ((creditId == null) ? 0 : creditId.hashCode());</span>
+<span class="nc bnc" id="L53" title="All 2 branches missed.">		result = prime * result + ((holderName == null) ? 0 : holderName.hashCode());</span>
+<span class="nc bnc" id="L54" title="All 2 branches missed.">		result = prime * result + ((iban == null) ? 0 : iban.hashCode());</span>
+<span class="nc bnc" id="L55" title="All 2 branches missed.">		result = prime * result + ((user == null) ? 0 : user.hashCode());</span>
+<span class="nc" id="L56">		return result;</span>
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+<span class="pc bpc" id="L61" title="1 of 2 branches missed.">		if (this == obj)</span>
+<span class="fc" id="L62">			return true;</span>
+<span class="nc bnc" id="L63" title="All 2 branches missed.">		if (obj == null)</span>
+<span class="nc" id="L64">			return false;</span>
+<span class="nc bnc" id="L65" title="All 2 branches missed.">		if (getClass() != obj.getClass())</span>
+<span class="nc" id="L66">			return false;</span>
+<span class="nc" id="L67">		CreditBankDetails other = (CreditBankDetails) obj;</span>
+<span class="nc bnc" id="L68" title="All 2 branches missed.">		if (bic == null) {</span>
+<span class="nc bnc" id="L69" title="All 2 branches missed.">			if (other.bic != null)</span>
+<span class="nc" id="L70">				return false;</span>
+<span class="nc bnc" id="L71" title="All 2 branches missed.">		} else if (!bic.equals(other.bic))</span>
+<span class="nc" id="L72">			return false;</span>
+<span class="nc bnc" id="L73" title="All 2 branches missed.">		if (creditId == null) {</span>
+<span class="nc bnc" id="L74" title="All 2 branches missed.">			if (other.creditId != null)</span>
+<span class="nc" id="L75">				return false;</span>
+<span class="nc bnc" id="L76" title="All 2 branches missed.">		} else if (!creditId.equals(other.creditId))</span>
+<span class="nc" id="L77">			return false;</span>
+<span class="nc bnc" id="L78" title="All 2 branches missed.">		if (holderName == null) {</span>
+<span class="nc bnc" id="L79" title="All 2 branches missed.">			if (other.holderName != null)</span>
+<span class="nc" id="L80">				return false;</span>
+<span class="nc bnc" id="L81" title="All 2 branches missed.">		} else if (!holderName.equals(other.holderName))</span>
+<span class="nc" id="L82">			return false;</span>
+<span class="nc bnc" id="L83" title="All 2 branches missed.">		if (iban == null) {</span>
+<span class="nc bnc" id="L84" title="All 2 branches missed.">			if (other.iban != null)</span>
+<span class="nc" id="L85">				return false;</span>
+<span class="nc bnc" id="L86" title="All 2 branches missed.">		} else if (!iban.equals(other.iban))</span>
+<span class="nc" id="L87">			return false;</span>
+<span class="nc bnc" id="L88" title="All 2 branches missed.">		if (user == null) {</span>
+<span class="nc bnc" id="L89" title="All 2 branches missed.">			if (other.user != null)</span>
+<span class="nc" id="L90">				return false;</span>
+<span class="nc bnc" id="L91" title="All 2 branches missed.">		} else if (!user.equals(other.user))</span>
+<span class="nc" id="L92">			return false;</span>
+<span class="nc" id="L93">		return true;</span>
+	}
+
+	public Long getCreditId() {
+<span class="fc" id="L97">		return creditId;</span>
+	}
+
+	public void setCreditId(Long creditId) {
+<span class="nc" id="L101">		this.creditId = creditId;</span>
+<span class="nc" id="L102">	}</span>
+
+	public UserAccount getUser() {
+<span class="fc" id="L105">		return user;</span>
+	}
+
+	public void setUser(UserAccount user) {
+<span class="nc" id="L109">		this.user = user;</span>
+<span class="nc" id="L110">	}</span>
+
+	public String getHolderName() {
+<span class="fc" id="L113">		return holderName;</span>
+	}
+
+	public void setHolderName(String holderName) {
+<span class="nc" id="L117">		this.holderName = holderName;</span>
+<span class="nc" id="L118">	}</span>
+
+	public String getIban() {
+<span class="fc" id="L121">		return iban;</span>
+	}
+
+	public void setIban(String iban) {
+<span class="nc" id="L125">		this.iban = iban;</span>
+<span class="nc" id="L126">	}</span>
+
+	public String getBic() {
+<span class="fc" id="L129">		return bic;</span>
+	}
+
+	public void setBic(String bic) {
+<span class="nc" id="L133">		this.bic = bic;</span>
+<span class="nc" id="L134">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

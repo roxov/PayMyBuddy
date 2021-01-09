@@ -1,0 +1,14 @@
+C:\Users\roxanne ovyn\git\OpenClassRooms\PayMyBuddy\src\main\java\fr\asterox\PayMyBuddy\consumer\ICreditBankDetailsRepository.java
+C:\Users\roxanne ovyn\git\OpenClassRooms\PayMyBuddy\src\main\java\fr\asterox\PayMyBuddy\model\PaymentTransaction.java
+C:\Users\roxanne ovyn\git\OpenClassRooms\PayMyBuddy\src\main\java\fr\asterox\PayMyBuddy\PayMyBuddyApplication.java
+C:\Users\roxanne ovyn\git\OpenClassRooms\PayMyBuddy\src\main\java\fr\asterox\PayMyBuddy\model\DebitBankDetails.java
+C:\Users\roxanne ovyn\git\OpenClassRooms\PayMyBuddy\src\main\java\fr\asterox\PayMyBuddy\consumer\ITransferTransactionRepository.java
+C:\Users\roxanne ovyn\git\OpenClassRooms\PayMyBuddy\src\main\java\fr\asterox\PayMyBuddy\model\UserAccount.java
+C:\Users\roxanne ovyn\git\OpenClassRooms\PayMyBuddy\src\main\java\fr\asterox\PayMyBuddy\model\TransferTransaction.java
+C:\Users\roxanne ovyn\git\OpenClassRooms\PayMyBuddy\src\main\java\fr\asterox\PayMyBuddy\service\TransferTransactionService.java
+C:\Users\roxanne ovyn\git\OpenClassRooms\PayMyBuddy\src\main\java\fr\asterox\PayMyBuddy\consumer\IUserAccountRepository.java
+C:\Users\roxanne ovyn\git\OpenClassRooms\PayMyBuddy\src\main\java\fr\asterox\PayMyBuddy\service\UserAccountService.java
+C:\Users\roxanne ovyn\git\OpenClassRooms\PayMyBuddy\src\main\java\fr\asterox\PayMyBuddy\consumer\IDebitBankDetailsRepository.java
+C:\Users\roxanne ovyn\git\OpenClassRooms\PayMyBuddy\src\main\java\fr\asterox\PayMyBuddy\consumer\IPaymentTransactionRepository.java
+C:\Users\roxanne ovyn\git\OpenClassRooms\PayMyBuddy\src\main\java\fr\asterox\PayMyBuddy\model\CreditBankDetails.java
+C:\Users\roxanne ovyn\git\OpenClassRooms\PayMyBuddy\src\main\java\fr\asterox\PayMyBuddy\service\PaymentTransactionService.java

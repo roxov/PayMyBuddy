@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: service.UserAccountServiceTest
+-------------------------------------------------------------------------------
+Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 8.322 s - in service.UserAccountServiceTest

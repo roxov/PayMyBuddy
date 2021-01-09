@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DebitBankDetails.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">PayMyBuddy</a> &gt; <a href="index.source.html" class="el_package">fr.asterox.PayMyBuddy.model</a> &gt; <span class="el_source">DebitBankDetails.java</span></div><h1>DebitBankDetails.java</h1><pre class="source lang-java linenums">package fr.asterox.PayMyBuddy.model;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
+@Entity
+public class DebitBankDetails {
+	@Column(name = &quot;DEBIT_ID&quot;)
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long debitId;
+	@ManyToOne
+	@JoinColumn(name = &quot;USER_ID&quot;, nullable = false)
+	private UserAccount user;
+	@Column(name = &quot;HOLDER_NAME&quot;)
+	private String holderName;
+	@Column(name = &quot;CARD_NUMBER&quot;)
+	private int cardNumber;
+	@Column(name = &quot;EXPIRATION_DATE&quot;)
+	private int expirationDate;
+	private int cvv;
+
+	public DebitBankDetails() {
+<span class="fc" id="L29">		super();</span>
+<span class="fc" id="L30">	}</span>
+
+	public DebitBankDetails(UserAccount user, String holderName, int cardNumber, int expirationDate, int cvv) {
+<span class="fc" id="L33">		super();</span>
+<span class="fc" id="L34">		this.user = user;</span>
+<span class="fc" id="L35">		this.holderName = holderName;</span>
+<span class="fc" id="L36">		this.cardNumber = cardNumber;</span>
+<span class="fc" id="L37">		this.expirationDate = expirationDate;</span>
+<span class="fc" id="L38">		this.cvv = cvv;</span>
+<span class="fc" id="L39">	}</span>
+
+	public DebitBankDetails(Long debitId, UserAccount user, String holderName, int cardNumber, int expirationDate,
+			int cvv) {
+<span class="nc" id="L43">		super();</span>
+<span class="nc" id="L44">		this.debitId = debitId;</span>
+<span class="nc" id="L45">		this.user = user;</span>
+<span class="nc" id="L46">		this.holderName = holderName;</span>
+<span class="nc" id="L47">		this.cardNumber = cardNumber;</span>
+<span class="nc" id="L48">		this.expirationDate = expirationDate;</span>
+<span class="nc" id="L49">		this.cvv = cvv;</span>
+<span class="nc" id="L50">	}</span>
+
+	@Override
+	public int hashCode() {
+<span class="nc" id="L54">		final int prime = 31;</span>
+<span class="nc" id="L55">		int result = 1;</span>
+<span class="nc" id="L56">		result = prime * result + cardNumber;</span>
+<span class="nc" id="L57">		result = prime * result + cvv;</span>
+<span class="nc bnc" id="L58" title="All 2 branches missed.">		result = prime * result + ((debitId == null) ? 0 : debitId.hashCode());</span>
+<span class="nc" id="L59">		result = prime * result + expirationDate;</span>
+<span class="nc bnc" id="L60" title="All 2 branches missed.">		result = prime * result + ((holderName == null) ? 0 : holderName.hashCode());</span>
+<span class="nc bnc" id="L61" title="All 2 branches missed.">		result = prime * result + ((user == null) ? 0 : user.hashCode());</span>
+<span class="nc" id="L62">		return result;</span>
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+<span class="pc bpc" id="L67" title="1 of 2 branches missed.">		if (this == obj)</span>
+<span class="fc" id="L68">			return true;</span>
+<span class="nc bnc" id="L69" title="All 2 branches missed.">		if (obj == null)</span>
+<span class="nc" id="L70">			return false;</span>
+<span class="nc bnc" id="L71" title="All 2 branches missed.">		if (getClass() != obj.getClass())</span>
+<span class="nc" id="L72">			return false;</span>
+<span class="nc" id="L73">		DebitBankDetails other = (DebitBankDetails) obj;</span>
+<span class="nc bnc" id="L74" title="All 2 branches missed.">		if (cardNumber != other.cardNumber)</span>
+<span class="nc" id="L75">			return false;</span>
+<span class="nc bnc" id="L76" title="All 2 branches missed.">		if (cvv != other.cvv)</span>
+<span class="nc" id="L77">			return false;</span>
+<span class="nc bnc" id="L78" title="All 2 branches missed.">		if (debitId == null) {</span>
+<span class="nc bnc" id="L79" title="All 2 branches missed.">			if (other.debitId != null)</span>
+<span class="nc" id="L80">				return false;</span>
+<span class="nc bnc" id="L81" title="All 2 branches missed.">		} else if (!debitId.equals(other.debitId))</span>
+<span class="nc" id="L82">			return false;</span>
+<span class="nc bnc" id="L83" title="All 2 branches missed.">		if (expirationDate != other.expirationDate)</span>
+<span class="nc" id="L84">			return false;</span>
+<span class="nc bnc" id="L85" title="All 2 branches missed.">		if (holderName == null) {</span>
+<span class="nc bnc" id="L86" title="All 2 branches missed.">			if (other.holderName != null)</span>
+<span class="nc" id="L87">				return false;</span>
+<span class="nc bnc" id="L88" title="All 2 branches missed.">		} else if (!holderName.equals(other.holderName))</span>
+<span class="nc" id="L89">			return false;</span>
+<span class="nc bnc" id="L90" title="All 2 branches missed.">		if (user == null) {</span>
+<span class="nc bnc" id="L91" title="All 2 branches missed.">			if (other.user != null)</span>
+<span class="nc" id="L92">				return false;</span>
+<span class="nc bnc" id="L93" title="All 2 branches missed.">		} else if (!user.equals(other.user))</span>
+<span class="nc" id="L94">			return false;</span>
+<span class="nc" id="L95">		return true;</span>
+	}
+
+	public Long getDebitId() {
+<span class="fc" id="L99">		return debitId;</span>
+	}
+
+	public void setDebitId(Long debitId) {
+<span class="nc" id="L103">		this.debitId = debitId;</span>
+<span class="nc" id="L104">	}</span>
+
+	public UserAccount getUser() {
+<span class="fc" id="L107">		return user;</span>
+	}
+
+	public void setUser(UserAccount user) {
+<span class="nc" id="L111">		this.user = user;</span>
+<span class="nc" id="L112">	}</span>
+
+	public String getHolderName() {
+<span class="fc" id="L115">		return holderName;</span>
+	}
+
+	public void setHolderName(String holderName) {
+<span class="nc" id="L119">		this.holderName = holderName;</span>
+<span class="nc" id="L120">	}</span>
+
+	public int getCardNumber() {
+<span class="fc" id="L123">		return cardNumber;</span>
+	}
+
+	public void setCardNumber(int cardNumber) {
+<span class="nc" id="L127">		this.cardNumber = cardNumber;</span>
+<span class="nc" id="L128">	}</span>
+
+	public int getExpirationDate() {
+<span class="fc" id="L131">		return expirationDate;</span>
+	}
+
+	public void setExpirationDate(int expirationDate) {
+<span class="nc" id="L135">		this.expirationDate = expirationDate;</span>
+<span class="nc" id="L136">	}</span>
+
+	public int getCvv() {
+<span class="fc" id="L139">		return cvv;</span>
+	}
+
+	public void setCvv(int cvv) {
+<span class="nc" id="L143">		this.cvv = cvv;</span>
+<span class="nc" id="L144">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserAccount.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">PayMyBuddy</a> &gt; <a href="index.source.html" class="el_package">fr.asterox.PayMyBuddy.model</a> &gt; <span class="el_source">UserAccount.java</span></div><h1>UserAccount.java</h1><pre class="source lang-java linenums">package fr.asterox.PayMyBuddy.model;
+
+import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+
+@Entity
+public class UserAccount {
+	@Column(name = &quot;USER_ID&quot;)
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long userId;
+	private String email;
+	private String nickname;
+	private String password;
+	@Column(name = &quot;APPLICATION_BALANCE&quot;)
+	private double applicationBalance;
+	@OneToMany(mappedBy = &quot;user&quot;, cascade = CascadeType.ALL)
+	private List&lt;TransferTransaction&gt; transactionsList;
+	@OneToMany(mappedBy = &quot;issuer&quot;, cascade = CascadeType.ALL)
+	private List&lt;PaymentTransaction&gt; issuerPaymentsList;
+	@OneToMany(mappedBy = &quot;recipient&quot;, cascade = CascadeType.ALL)
+	private List&lt;PaymentTransaction&gt; recipientPaymentsList;
+	@ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
+	@JoinTable(name = &quot;FRIENDS_NETWORK&quot;, joinColumns = @JoinColumn(name = &quot;USER_ID&quot;, referencedColumnName = &quot;USER_ID&quot;), inverseJoinColumns = @JoinColumn(name = &quot;FRIEND_ID&quot;, referencedColumnName = &quot;USER_ID&quot;))
+	private List&lt;UserAccount&gt; friendsList;
+	@OneToMany(mappedBy = &quot;user&quot;, cascade = CascadeType.ALL, orphanRemoval = true)
+	private List&lt;CreditBankDetails&gt; creditBankDetailsList;
+	@OneToMany(mappedBy = &quot;user&quot;, cascade = CascadeType.ALL, orphanRemoval = true)
+	private List&lt;DebitBankDetails&gt; debitBankDetailsList;
+
+	public UserAccount() {
+<span class="fc" id="L43">		super();</span>
+<span class="fc" id="L44">	}</span>
+
+	public UserAccount(String email, String nickname, String password, double applicationBalance,
+			List&lt;TransferTransaction&gt; transactionsList, List&lt;PaymentTransaction&gt; issuerPaymentsList,
+			List&lt;PaymentTransaction&gt; recipientPaymentsList, List&lt;UserAccount&gt; friendsList,
+			List&lt;CreditBankDetails&gt; creditBankDetailsList, List&lt;DebitBankDetails&gt; debitBankDetailsList) {
+<span class="fc" id="L50">		super();</span>
+<span class="fc" id="L51">		this.email = email;</span>
+<span class="fc" id="L52">		this.nickname = nickname;</span>
+<span class="fc" id="L53">		this.password = password;</span>
+<span class="fc" id="L54">		this.applicationBalance = applicationBalance;</span>
+<span class="fc" id="L55">		this.transactionsList = transactionsList;</span>
+<span class="fc" id="L56">		this.issuerPaymentsList = issuerPaymentsList;</span>
+<span class="fc" id="L57">		this.recipientPaymentsList = recipientPaymentsList;</span>
+<span class="fc" id="L58">		this.friendsList = friendsList;</span>
+<span class="fc" id="L59">		this.creditBankDetailsList = creditBankDetailsList;</span>
+<span class="fc" id="L60">		this.debitBankDetailsList = debitBankDetailsList;</span>
+<span class="fc" id="L61">	}</span>
+
+	public UserAccount(Long userId, String email, String nickname, String password, double applicationBalance,
+			List&lt;TransferTransaction&gt; transactionsList, List&lt;PaymentTransaction&gt; issuerPaymentsList,
+			List&lt;PaymentTransaction&gt; recipientPaymentsList, List&lt;UserAccount&gt; friendsList,
+			List&lt;CreditBankDetails&gt; creditBankDetailsList, List&lt;DebitBankDetails&gt; debitBankDetailsList) {
+<span class="fc" id="L67">		super();</span>
+<span class="fc" id="L68">		this.userId = userId;</span>
+<span class="fc" id="L69">		this.email = email;</span>
+<span class="fc" id="L70">		this.nickname = nickname;</span>
+<span class="fc" id="L71">		this.password = password;</span>
+<span class="fc" id="L72">		this.applicationBalance = applicationBalance;</span>
+<span class="fc" id="L73">		this.transactionsList = transactionsList;</span>
+<span class="fc" id="L74">		this.issuerPaymentsList = issuerPaymentsList;</span>
+<span class="fc" id="L75">		this.recipientPaymentsList = recipientPaymentsList;</span>
+<span class="fc" id="L76">		this.friendsList = friendsList;</span>
+<span class="fc" id="L77">		this.creditBankDetailsList = creditBankDetailsList;</span>
+<span class="fc" id="L78">		this.debitBankDetailsList = debitBankDetailsList;</span>
+<span class="fc" id="L79">	}</span>
+
+	@Override
+	public int hashCode() {
+<span class="nc" id="L83">		final int prime = 31;</span>
+<span class="nc" id="L84">		int result = 1;</span>
+		long temp;
+<span class="nc" id="L86">		temp = Double.doubleToLongBits(applicationBalance);</span>
+<span class="nc" id="L87">		result = prime * result + (int) (temp ^ (temp &gt;&gt;&gt; 32));</span>
+<span class="nc bnc" id="L88" title="All 2 branches missed.">		result = prime * result + ((creditBankDetailsList == null) ? 0 : creditBankDetailsList.hashCode());</span>
+<span class="nc bnc" id="L89" title="All 2 branches missed.">		result = prime * result + ((debitBankDetailsList == null) ? 0 : debitBankDetailsList.hashCode());</span>
+<span class="nc bnc" id="L90" title="All 2 branches missed.">		result = prime * result + ((email == null) ? 0 : email.hashCode());</span>
+<span class="nc bnc" id="L91" title="All 2 branches missed.">		result = prime * result + ((friendsList == null) ? 0 : friendsList.hashCode());</span>
+<span class="nc bnc" id="L92" title="All 2 branches missed.">		result = prime * result + ((issuerPaymentsList == null) ? 0 : issuerPaymentsList.hashCode());</span>
+<span class="nc bnc" id="L93" title="All 2 branches missed.">		result = prime * result + ((nickname == null) ? 0 : nickname.hashCode());</span>
+<span class="nc bnc" id="L94" title="All 2 branches missed.">		result = prime * result + ((password == null) ? 0 : password.hashCode());</span>
+<span class="nc bnc" id="L95" title="All 2 branches missed.">		result = prime * result + ((recipientPaymentsList == null) ? 0 : recipientPaymentsList.hashCode());</span>
+<span class="nc bnc" id="L96" title="All 2 branches missed.">		result = prime * result + ((transactionsList == null) ? 0 : transactionsList.hashCode());</span>
+<span class="nc bnc" id="L97" title="All 2 branches missed.">		result = prime * result + ((userId == null) ? 0 : userId.hashCode());</span>
+<span class="nc" id="L98">		return result;</span>
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+<span class="fc bfc" id="L103" title="All 2 branches covered.">		if (this == obj)</span>
+<span class="fc" id="L104">			return true;</span>
+<span class="pc bpc" id="L105" title="1 of 2 branches missed.">		if (obj == null)</span>
+<span class="nc" id="L106">			return false;</span>
+<span class="pc bpc" id="L107" title="1 of 2 branches missed.">		if (getClass() != obj.getClass())</span>
+<span class="nc" id="L108">			return false;</span>
+<span class="fc" id="L109">		UserAccount other = (UserAccount) obj;</span>
+<span class="pc bpc" id="L110" title="1 of 2 branches missed.">		if (Double.doubleToLongBits(applicationBalance) != Double.doubleToLongBits(other.applicationBalance))</span>
+<span class="fc" id="L111">			return false;</span>
+<span class="nc bnc" id="L112" title="All 2 branches missed.">		if (creditBankDetailsList == null) {</span>
+<span class="nc bnc" id="L113" title="All 2 branches missed.">			if (other.creditBankDetailsList != null)</span>
+<span class="nc" id="L114">				return false;</span>
+<span class="nc bnc" id="L115" title="All 2 branches missed.">		} else if (!creditBankDetailsList.equals(other.creditBankDetailsList))</span>
+<span class="nc" id="L116">			return false;</span>
+<span class="nc bnc" id="L117" title="All 2 branches missed.">		if (debitBankDetailsList == null) {</span>
+<span class="nc bnc" id="L118" title="All 2 branches missed.">			if (other.debitBankDetailsList != null)</span>
+<span class="nc" id="L119">				return false;</span>
+<span class="nc bnc" id="L120" title="All 2 branches missed.">		} else if (!debitBankDetailsList.equals(other.debitBankDetailsList))</span>
+<span class="nc" id="L121">			return false;</span>
+<span class="nc bnc" id="L122" title="All 2 branches missed.">		if (email == null) {</span>
+<span class="nc bnc" id="L123" title="All 2 branches missed.">			if (other.email != null)</span>
+<span class="nc" id="L124">				return false;</span>
+<span class="nc bnc" id="L125" title="All 2 branches missed.">		} else if (!email.equals(other.email))</span>
+<span class="nc" id="L126">			return false;</span>
+<span class="nc bnc" id="L127" title="All 2 branches missed.">		if (friendsList == null) {</span>
+<span class="nc bnc" id="L128" title="All 2 branches missed.">			if (other.friendsList != null)</span>
+<span class="nc" id="L129">				return false;</span>
+<span class="nc bnc" id="L130" title="All 2 branches missed.">		} else if (!friendsList.equals(other.friendsList))</span>
+<span class="nc" id="L131">			return false;</span>
+<span class="nc bnc" id="L132" title="All 2 branches missed.">		if (issuerPaymentsList == null) {</span>
+<span class="nc bnc" id="L133" title="All 2 branches missed.">			if (other.issuerPaymentsList != null)</span>
+<span class="nc" id="L134">				return false;</span>
+<span class="nc bnc" id="L135" title="All 2 branches missed.">		} else if (!issuerPaymentsList.equals(other.issuerPaymentsList))</span>
+<span class="nc" id="L136">			return false;</span>
+<span class="nc bnc" id="L137" title="All 2 branches missed.">		if (nickname == null) {</span>
+<span class="nc bnc" id="L138" title="All 2 branches missed.">			if (other.nickname != null)</span>
+<span class="nc" id="L139">				return false;</span>
+<span class="nc bnc" id="L140" title="All 2 branches missed.">		} else if (!nickname.equals(other.nickname))</span>
+<span class="nc" id="L141">			return false;</span>
+<span class="nc bnc" id="L142" title="All 2 branches missed.">		if (password == null) {</span>
+<span class="nc bnc" id="L143" title="All 2 branches missed.">			if (other.password != null)</span>
+<span class="nc" id="L144">				return false;</span>
+<span class="nc bnc" id="L145" title="All 2 branches missed.">		} else if (!password.equals(other.password))</span>
+<span class="nc" id="L146">			return false;</span>
+<span class="nc bnc" id="L147" title="All 2 branches missed.">		if (recipientPaymentsList == null) {</span>
+<span class="nc bnc" id="L148" title="All 2 branches missed.">			if (other.recipientPaymentsList != null)</span>
+<span class="nc" id="L149">				return false;</span>
+<span class="nc bnc" id="L150" title="All 2 branches missed.">		} else if (!recipientPaymentsList.equals(other.recipientPaymentsList))</span>
+<span class="nc" id="L151">			return false;</span>
+<span class="nc bnc" id="L152" title="All 2 branches missed.">		if (transactionsList == null) {</span>
+<span class="nc bnc" id="L153" title="All 2 branches missed.">			if (other.transactionsList != null)</span>
+<span class="nc" id="L154">				return false;</span>
+<span class="nc bnc" id="L155" title="All 2 branches missed.">		} else if (!transactionsList.equals(other.transactionsList))</span>
+<span class="nc" id="L156">			return false;</span>
+<span class="nc bnc" id="L157" title="All 2 branches missed.">		if (userId == null) {</span>
+<span class="nc bnc" id="L158" title="All 2 branches missed.">			if (other.userId != null)</span>
+<span class="nc" id="L159">				return false;</span>
+<span class="nc bnc" id="L160" title="All 2 branches missed.">		} else if (!userId.equals(other.userId))</span>
+<span class="nc" id="L161">			return false;</span>
+<span class="nc" id="L162">		return true;</span>
+	}
+
+	public Long getUserId() {
+<span class="fc" id="L166">		return userId;</span>
+	}
+
+	public void setUserId(Long userId) {
+<span class="nc" id="L170">		this.userId = userId;</span>
+<span class="nc" id="L171">	}</span>
+
+	public String getEmail() {
+<span class="fc" id="L174">		return email;</span>
+	}
+
+	public void setEmail(String email) {
+<span class="nc" id="L178">		this.email = email;</span>
+<span class="nc" id="L179">	}</span>
+
+	public String getNickname() {
+<span class="fc" id="L182">		return nickname;</span>
+	}
+
+	public void setNickname(String nickname) {
+<span class="nc" id="L186">		this.nickname = nickname;</span>
+<span class="nc" id="L187">	}</span>
+
+	public String getPassword() {
+<span class="fc" id="L190">		return password;</span>
+	}
+
+	public void setPassword(String password) {
+<span class="fc" id="L194">		this.password = password;</span>
+<span class="fc" id="L195">	}</span>
+
+	public double getApplicationBalance() {
+<span class="fc" id="L198">		return applicationBalance;</span>
+	}
+
+	public void setApplicationBalance(double applicationBalance) {
+<span class="fc" id="L202">		this.applicationBalance = applicationBalance;</span>
+<span class="fc" id="L203">	}</span>
+
+	public List&lt;TransferTransaction&gt; getTransactionsList() {
+<span class="nc" id="L206">		return transactionsList;</span>
+	}
+
+	public void setTransactionsList(List&lt;TransferTransaction&gt; transactionsList) {
+<span class="nc" id="L210">		this.transactionsList = transactionsList;</span>
+<span class="nc" id="L211">	}</span>
+
+	public List&lt;PaymentTransaction&gt; getIssuerPaymentsList() {
+<span class="nc" id="L214">		return issuerPaymentsList;</span>
+	}
+
+	public void setIssuerPaymentsList(List&lt;PaymentTransaction&gt; issuerPaymentsList) {
+<span class="nc" id="L218">		this.issuerPaymentsList = issuerPaymentsList;</span>
+<span class="nc" id="L219">	}</span>
+
+	public List&lt;PaymentTransaction&gt; getRecipientPaymentsList() {
+<span class="nc" id="L222">		return recipientPaymentsList;</span>
+	}
+
+	public void setRecipientPaymentsList(List&lt;PaymentTransaction&gt; recipientPaymentsList) {
+<span class="nc" id="L226">		this.recipientPaymentsList = recipientPaymentsList;</span>
+<span class="nc" id="L227">	}</span>
+
+	public List&lt;UserAccount&gt; getFriendsList() {
+<span class="fc" id="L230">		return friendsList;</span>
+	}
+
+	public void setFriendsList(List&lt;UserAccount&gt; friendsList) {
+<span class="fc" id="L234">		this.friendsList = friendsList;</span>
+<span class="fc" id="L235">	}</span>
+
+	public List&lt;CreditBankDetails&gt; getCreditBankDetailsList() {
+<span class="fc" id="L238">		return creditBankDetailsList;</span>
+	}
+
+	public void setCreditBankDetailsList(List&lt;CreditBankDetails&gt; creditBankDetailsList) {
+<span class="fc" id="L242">		this.creditBankDetailsList = creditBankDetailsList;</span>
+<span class="fc" id="L243">	}</span>
+
+	public List&lt;DebitBankDetails&gt; getDebitBankDetailsList() {
+<span class="fc" id="L246">		return debitBankDetailsList;</span>
+	}
+
+	public void setDebitBankDetailsList(List&lt;DebitBankDetails&gt; debitBankDetailsList) {
+<span class="fc" id="L250">		this.debitBankDetailsList = debitBankDetailsList;</span>
+<span class="fc" id="L251">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

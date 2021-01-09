@@ -1,6 +1,7 @@
 package service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import fr.asterox.PayMyBuddy.PayMyBuddyApplication;
 import fr.asterox.PayMyBuddy.consumer.IUserAccountRepository;
@@ -26,6 +28,9 @@ public class UserAccountServiceTest {
 
 	@Autowired
 	private UserAccountService userAccountService;
+
+	@Autowired
+	PasswordEncoder passwordEncoder;
 
 	@MockBean
 	private IUserAccountRepository userAccountRepository;
@@ -41,6 +46,18 @@ public class UserAccountServiceTest {
 		friendsList.add(userAccount1);
 		userAccount2 = new UserAccount("email2", "nickname2", "password2", 2000, new ArrayList<>(), new ArrayList<>(),
 				new ArrayList<>(), friendsList, new ArrayList<>(), new ArrayList<>());
+	}
+
+	@Test
+	public void givenAnUserAccount_whenCreateUserAccount_thenReturnEncryptedPassword() {
+		// GIVEN
+		when(userAccountRepository.save(userAccount1)).thenReturn(userAccount1);
+
+		// WHEN
+		UserAccount result = userAccountService.createUserAccount(userAccount1);
+
+		// THEN
+		assertTrue(passwordEncoder.matches("password1", result.getPassword()));
 	}
 
 	@Test

@@ -14,19 +14,14 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
-import org.hibernate.annotations.ColumnTransformer;
-
 @Entity
 public class UserAccount {
 	@Column(name = "USER_ID")
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long userId;
-	// @ColumnTransformer(read = "pgp_sym_decrypt(email,'cryptedEmail')", write =
-	// "pgp_sym_encrypt(?,'cryptedEmail')")
 	private String email;
 	private String nickname;
-	@ColumnTransformer(read = "pgp_sym_decrypt(password,'cryptedPassword')", write = "pgp_sym_encrypt(?,'cryptedPassword')")
 	private String password;
 	@Column(name = "APPLICATION_BALANCE")
 	private double applicationBalance;

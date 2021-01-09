@@ -45,8 +45,7 @@ public class DebitBankDetailsIT {
 	@Test
 	public void givenDebitBankDetails_whenCreateDebitBankDetails_thenReturnAssociatedUserAccount() throws Exception {
 		// GIVEN
-		DebitBankDetails debitBankDetails = new DebitBankDetails(createdUserAccount, "holdername1", 12345678, 0120,
-				222);
+		DebitBankDetails debitBankDetails = new DebitBankDetails(createdUserAccount, "holdername1", 12345678, 0120);
 
 		// WHEN
 		DebitBankDetails createdDebitBankDetails = debitBankDetailsRepository.save(debitBankDetails);
@@ -58,14 +57,12 @@ public class DebitBankDetailsIT {
 		assertEquals("holdername1", result.get().getHolderName());
 		assertEquals(12345678, result.get().getCardNumber());
 		assertEquals(0120, result.get().getExpirationDate());
-		assertEquals(222, result.get().getCvv());
 	}
 
 	@Test
 	public void givenADebitBankDetails_whenDeleteThisDebitBankDetails_thenReturnNoDebitBankDetails() throws Exception {
 		// GIVEN
-		DebitBankDetails debitBankDetails = new DebitBankDetails(createdUserAccount, "holdername1", 12345678, 0120,
-				222);
+		DebitBankDetails debitBankDetails = new DebitBankDetails(createdUserAccount, "holdername1", 12345678, 0120);
 		DebitBankDetails createdDebitBankDetails = debitBankDetailsRepository.save(debitBankDetails);
 		Long debitId = createdDebitBankDetails.getDebitId();
 

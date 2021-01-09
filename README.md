@@ -1,2 +1,3 @@
 # PayMyBuddy
-![Diagramme UML](DB_UML.png)
+![Diagramme DB](DB_UML.png)
+![Diagramme UML](diagramme_classes.png)

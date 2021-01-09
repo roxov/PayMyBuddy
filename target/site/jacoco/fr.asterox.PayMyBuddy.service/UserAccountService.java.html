@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserAccountService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">PayMyBuddy</a> &gt; <a href="index.source.html" class="el_package">fr.asterox.PayMyBuddy.service</a> &gt; <span class="el_source">UserAccountService.java</span></div><h1>UserAccountService.java</h1><pre class="source lang-java linenums">package fr.asterox.PayMyBuddy.service;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import fr.asterox.PayMyBuddy.consumer.ICreditBankDetailsRepository;
+import fr.asterox.PayMyBuddy.consumer.IDebitBankDetailsRepository;
+import fr.asterox.PayMyBuddy.consumer.IPaymentTransactionRepository;
+import fr.asterox.PayMyBuddy.consumer.ITransferTransactionRepository;
+import fr.asterox.PayMyBuddy.consumer.IUserAccountRepository;
+import fr.asterox.PayMyBuddy.model.UserAccount;
+
+@Service
+<span class="fc" id="L20">public class UserAccountService {</span>
+	@Autowired
+	IUserAccountRepository userAccountRepository;
+
+	@Autowired
+	ICreditBankDetailsRepository creditBankDetailsRepository;
+
+	@Autowired
+	IDebitBankDetailsRepository debitBankDetailsRepository;
+
+	@Autowired
+	IPaymentTransactionRepository paymentTransactionRepository;
+
+	@Autowired
+	ITransferTransactionRepository transferTransactionRepository;
+
+	@Autowired
+	PasswordEncoder passwordEncoder;
+
+<span class="fc" id="L39">	private static final Logger LOGGER = LogManager.getLogger(UserAccountService.class);</span>
+
+	public Optional&lt;UserAccount&gt; addFriend(UserAccount userAccount, String friendEmail) {
+<span class="fc" id="L42">		UserAccount user = userAccountRepository.findByEmail(userAccount.getEmail());</span>
+
+<span class="pc bpc" id="L44" title="1 of 2 branches missed.">		if (user == null) {</span>
+<span class="nc" id="L45">			LOGGER.error(&quot;This user account does not exist.&quot;);</span>
+<span class="nc" id="L46">			return Optional.empty();</span>
+		}
+
+<span class="fc" id="L49">		UserAccount friend = userAccountRepository.findByEmail(friendEmail);</span>
+
+<span class="pc bpc" id="L51" title="1 of 2 branches missed.">		if (friend == null) {</span>
+<span class="nc" id="L52">			LOGGER.error(&quot;This user account (friend) does not exist.&quot;);</span>
+<span class="nc" id="L53">			return Optional.empty();</span>
+		}
+
+<span class="fc" id="L56">		List&lt;UserAccount&gt; friendsList = user.getFriendsList();</span>
+
+<span class="fc bfc" id="L58" title="All 2 branches covered.">		for (UserAccount existingFriend : friendsList) {</span>
+<span class="fc bfc" id="L59" title="All 2 branches covered.">			if (existingFriend.getEmail().equals(friendEmail)) {</span>
+<span class="fc" id="L60">				LOGGER.info(&quot;This relationship already exists.&quot;);</span>
+<span class="fc" id="L61">				return Optional.empty();</span>
+			}
+<span class="fc" id="L63">		}</span>
+<span class="fc" id="L64">		friendsList.add(friend);</span>
+<span class="fc" id="L65">		user.setFriendsList(friendsList);</span>
+<span class="fc" id="L66">		LOGGER.info(&quot;Updating UserAccount friendslist&quot;);</span>
+<span class="fc" id="L67">		return Optional.of(userAccountRepository.save(user));</span>
+	}
+
+	public Optional&lt;UserAccount&gt; deleteFriend(UserAccount userAccount, String friendEmail) {
+<span class="fc" id="L71">		UserAccount user = userAccountRepository.findByEmail(userAccount.getEmail());</span>
+
+<span class="pc bpc" id="L73" title="1 of 2 branches missed.">		if (user == null) {</span>
+<span class="nc" id="L74">			LOGGER.error(&quot;This user account does not exist.&quot;);</span>
+<span class="nc" id="L75">			return Optional.empty();</span>
+		}
+
+<span class="fc" id="L78">		List&lt;UserAccount&gt; friendsList = user.getFriendsList();</span>
+
+<span class="fc bfc" id="L80" title="All 2 branches covered.">		for (UserAccount existingFriend : friendsList) {</span>
+<span class="pc bpc" id="L81" title="1 of 2 branches missed.">			if (existingFriend.getEmail().equals(friendEmail)) {</span>
+<span class="fc" id="L82">				LOGGER.info(&quot;Deleting friendUser from friendslist&quot;);</span>
+<span class="fc" id="L83">				friendsList.remove(existingFriend);</span>
+<span class="fc" id="L84">				user.setFriendsList(friendsList);</span>
+<span class="fc" id="L85">				return Optional.of(userAccountRepository.save(user));</span>
+
+			}
+<span class="nc" id="L88">		}</span>
+<span class="fc" id="L89">		LOGGER.info(&quot;No relation to delete&quot;);</span>
+<span class="fc" id="L90">		return Optional.empty();</span>
+	}
+
+	public UserAccount createUserAccount(UserAccount userAccount) {
+<span class="fc" id="L94">		String encodedPassword = passwordEncoder.encode(userAccount.getPassword());</span>
+<span class="fc" id="L95">		userAccount.setPassword(encodedPassword);</span>
+<span class="fc" id="L96">		LOGGER.info(&quot;Creating UserAccount&quot;);</span>
+<span class="fc" id="L97">		return userAccountRepository.save(userAccount);</span>
+	}
+
+	public UserAccount findByEmail(String email) {
+<span class="fc" id="L101">		UserAccount userAccount = userAccountRepository.findByEmail(email);</span>
+
+<span class="pc bpc" id="L103" title="1 of 2 branches missed.">		if (userAccount == null) {</span>
+<span class="nc" id="L104">			LOGGER.error(&quot;This user account does not exist.&quot;);</span>
+<span class="nc" id="L105">			return null;</span>
+		}
+
+<span class="fc" id="L108">		LOGGER.info(&quot;Creating UserAccount&quot;);</span>
+<span class="fc" id="L109">		return userAccount;</span>
+	}
+
+	public void updateUserAccount(UserAccount userAccount) {
+<span class="nc" id="L113">		userAccountRepository.save(userAccount);</span>
+<span class="nc" id="L114">		LOGGER.info(&quot;Updating UserAccount&quot;);</span>
+<span class="nc" id="L115">	}</span>
+
+	public void deleteUserAccount(UserAccount userAccount) {
+<span class="nc" id="L118">		userAccountRepository.delete(userAccount);</span>
+<span class="nc" id="L119">		LOGGER.info(&quot;Deleting UserAccount&quot;);</span>
+<span class="nc" id="L120">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

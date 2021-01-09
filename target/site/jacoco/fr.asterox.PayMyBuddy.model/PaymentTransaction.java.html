@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PaymentTransaction.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">PayMyBuddy</a> &gt; <a href="index.source.html" class="el_package">fr.asterox.PayMyBuddy.model</a> &gt; <span class="el_source">PaymentTransaction.java</span></div><h1>PaymentTransaction.java</h1><pre class="source lang-java linenums">package fr.asterox.PayMyBuddy.model;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
+@Entity
+public class PaymentTransaction {
+	@Column(name = &quot;PAYMENT_ID&quot;)
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long paymentId;
+	@ManyToOne
+	@JoinColumn(name = &quot;ISSUER_ID&quot;, nullable = false)
+	private UserAccount issuer;
+	@ManyToOne
+	@JoinColumn(name = &quot;RECIPIENT_ID&quot;, nullable = false)
+	private UserAccount recipient;
+	private String description;
+	private double amount;
+
+	public PaymentTransaction() {
+<span class="fc" id="L27">		super();</span>
+<span class="fc" id="L28">	}</span>
+
+	public PaymentTransaction(UserAccount issuer, UserAccount recipient, String description, double amount) {
+<span class="fc" id="L31">		super();</span>
+<span class="fc" id="L32">		this.issuer = issuer;</span>
+<span class="fc" id="L33">		this.recipient = recipient;</span>
+<span class="fc" id="L34">		this.description = description;</span>
+<span class="fc" id="L35">		this.amount = amount;</span>
+<span class="fc" id="L36">	}</span>
+
+	public PaymentTransaction(Long paymentId, UserAccount issuer, UserAccount recipient, String description,
+			double amount) {
+<span class="nc" id="L40">		super();</span>
+<span class="nc" id="L41">		this.paymentId = paymentId;</span>
+<span class="nc" id="L42">		this.issuer = issuer;</span>
+<span class="nc" id="L43">		this.recipient = recipient;</span>
+<span class="nc" id="L44">		this.description = description;</span>
+<span class="nc" id="L45">		this.amount = amount;</span>
+<span class="nc" id="L46">	}</span>
+
+	@Override
+	public int hashCode() {
+<span class="nc" id="L50">		final int prime = 31;</span>
+<span class="nc" id="L51">		int result = 1;</span>
+		long temp;
+<span class="nc" id="L53">		temp = Double.doubleToLongBits(amount);</span>
+<span class="nc" id="L54">		result = prime * result + (int) (temp ^ (temp &gt;&gt;&gt; 32));</span>
+<span class="nc bnc" id="L55" title="All 2 branches missed.">		result = prime * result + ((description == null) ? 0 : description.hashCode());</span>
+<span class="nc bnc" id="L56" title="All 2 branches missed.">		result = prime * result + ((issuer == null) ? 0 : issuer.hashCode());</span>
+<span class="nc bnc" id="L57" title="All 2 branches missed.">		result = prime * result + ((paymentId == null) ? 0 : paymentId.hashCode());</span>
+<span class="nc bnc" id="L58" title="All 2 branches missed.">		result = prime * result + ((recipient == null) ? 0 : recipient.hashCode());</span>
+<span class="nc" id="L59">		return result;</span>
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+<span class="pc bpc" id="L64" title="1 of 2 branches missed.">		if (this == obj)</span>
+<span class="nc" id="L65">			return true;</span>
+<span class="pc bpc" id="L66" title="1 of 2 branches missed.">		if (obj == null)</span>
+<span class="nc" id="L67">			return false;</span>
+<span class="pc bpc" id="L68" title="1 of 2 branches missed.">		if (getClass() != obj.getClass())</span>
+<span class="nc" id="L69">			return false;</span>
+<span class="fc" id="L70">		PaymentTransaction other = (PaymentTransaction) obj;</span>
+<span class="pc bpc" id="L71" title="1 of 2 branches missed.">		if (Double.doubleToLongBits(amount) != Double.doubleToLongBits(other.amount))</span>
+<span class="nc" id="L72">			return false;</span>
+<span class="pc bpc" id="L73" title="1 of 2 branches missed.">		if (description == null) {</span>
+<span class="nc bnc" id="L74" title="All 2 branches missed.">			if (other.description != null)</span>
+<span class="nc" id="L75">				return false;</span>
+<span class="pc bpc" id="L76" title="1 of 2 branches missed.">		} else if (!description.equals(other.description))</span>
+<span class="nc" id="L77">			return false;</span>
+<span class="pc bpc" id="L78" title="1 of 2 branches missed.">		if (issuer == null) {</span>
+<span class="nc bnc" id="L79" title="All 2 branches missed.">			if (other.issuer != null)</span>
+<span class="nc" id="L80">				return false;</span>
+<span class="pc bpc" id="L81" title="1 of 2 branches missed.">		} else if (!issuer.equals(other.issuer))</span>
+<span class="nc" id="L82">			return false;</span>
+<span class="pc bpc" id="L83" title="1 of 2 branches missed.">		if (paymentId == null) {</span>
+<span class="pc bpc" id="L84" title="1 of 2 branches missed.">			if (other.paymentId != null)</span>
+<span class="nc" id="L85">				return false;</span>
+<span class="nc bnc" id="L86" title="All 2 branches missed.">		} else if (!paymentId.equals(other.paymentId))</span>
+<span class="nc" id="L87">			return false;</span>
+<span class="pc bpc" id="L88" title="1 of 2 branches missed.">		if (recipient == null) {</span>
+<span class="nc bnc" id="L89" title="All 2 branches missed.">			if (other.recipient != null)</span>
+<span class="nc" id="L90">				return false;</span>
+<span class="pc bpc" id="L91" title="1 of 2 branches missed.">		} else if (!recipient.equals(other.recipient))</span>
+<span class="nc" id="L92">			return false;</span>
+<span class="fc" id="L93">		return true;</span>
+	}
+
+	public Long getPaymentId() {
+<span class="fc" id="L97">		return paymentId;</span>
+	}
+
+	public void setPaymentId(Long paymentId) {
+<span class="nc" id="L101">		this.paymentId = paymentId;</span>
+<span class="nc" id="L102">	}</span>
+
+	public UserAccount getIssuer() {
+<span class="fc" id="L105">		return issuer;</span>
+	}
+
+	public void setIssuer(UserAccount issuer) {
+<span class="nc" id="L109">		this.issuer = issuer;</span>
+<span class="nc" id="L110">	}</span>
+
+	public UserAccount getRecipient() {
+<span class="fc" id="L113">		return recipient;</span>
+	}
+
+	public void setRecipient(UserAccount recipient) {
+<span class="nc" id="L117">		this.recipient = recipient;</span>
+<span class="nc" id="L118">	}</span>
+
+	public String getDescription() {
+<span class="fc" id="L121">		return description;</span>
+	}
+
+	public void setDescription(String description) {
+<span class="nc" id="L125">		this.description = description;</span>
+<span class="nc" id="L126">	}</span>
+
+	public double getAmount() {
+<span class="fc" id="L129">		return amount;</span>
+	}
+
+	public void setAmount(double amount) {
+<span class="nc" id="L133">		this.amount = amount;</span>
+<span class="nc" id="L134">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>
